@@ -1,0 +1,163 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  background-color: #f5f5f5;
+  font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+}
+
+.navbar {
+  background-color: #db1010;
+}
+.navbar-brand, .nav-link {
+  color: white !important;
+}
+
+.navbar-toggler {
+  border-color: white;
+}
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.btn-primary {
+  background-color: #db1010;
+  border-color: #db1010;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #600000;
+  border-color: #600000;
+  color: white;
+}
+
+.btn-outline-primary {
+  color: #db1010;
+  border-color: #db1010;
+}
+.btn-outline-primary:hover {
+  background-color: #db1010;
+  border-color: #db1010;
+  color: white;
+}
+
+footer {
+  background-color: #db1010;
+  color: white;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #db1010 0%, #600000 100%);
+}
+
+.login-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card img {
+  max-width: 200px;
+  margin-bottom: 1.5rem;
+}
+
+.foro-container {
+  padding-top: 80px;
+  min-height: calc(100vh - 60px);
+}
+
+.comentario-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.comentario-card:hover {
+  transform: translateY(-2px);
+}
+
+.comentario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comentario-usuario {
+  font-weight: 700;
+  color: #db1010;
+}
+
+.comentario-fecha {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.comentario-contenido {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.comentario-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  align-items: center;
+}
+
+.respuesta-container {
+  margin-left: 2rem;
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #db1010;
+}
+
+.respuesta-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .respuesta-container {
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
+  }
+}
+
+/* Estilos para Material de Estudio */
+.hover-shadow {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.card-title {
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+}
+
+/* Iconos de Bootstrap */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
