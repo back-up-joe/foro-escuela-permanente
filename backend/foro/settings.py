@@ -127,4 +127,9 @@ REST_FRAMEWORK = {
     ],
 }
 
-MAX_UPLOAD_SIZE = 10485760  # 10MB en bytes
+# Límite de subida de archivos (20MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 20971520  # 20MB en bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 20971520   # 20MB en bytes
+
+# También puedes agregar:
+MAX_UPLOAD_SIZE = 20971520  # 20MB
