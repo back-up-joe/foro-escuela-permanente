@@ -11,7 +11,11 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # ALLOWED_HOSTS - Configuración directa
-ALLOWED_HOSTS = ['localhost', '134.122.24.38', 'ivanljubetic.sytes.net', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'localhost',
+    '134.122.24.38',
+    'escueladecuadros.sytes.net',
+    '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -99,8 +103,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://134.122.24.38:3000",
-    "https://ivanljubetic.sytes.net",
-    "http://ivanljubetic.sytes.net",
+    "https://escueladecuadros.sytes.net",
+    "http://escueladecuadros.sytes.net",
 ]
 CORS_ALLOW_ALL_ORIGINS = False
 
@@ -110,8 +114,8 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://134.122.24.38:3000",
-    "https://ivanljubetic.sytes.net",
-    "http://ivanljubetic.sytes.net",
+    "https://escueladecuadros.sytes.net",
+    "http://escueladecuadros.sytes.net",
 ]
 
 REST_FRAMEWORK = {
