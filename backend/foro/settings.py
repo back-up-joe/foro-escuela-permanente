@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,134.122.24.38,ivanljubetic.sytes.net').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -94,21 +94,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Agregar o modificar
+# CORS configurado
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://165.227.196.116:3000",
+    "http://134.122.24.38:3000",
     "https://ivanljubetic.sytes.net",
+    "http://ivanljubetic.sytes.net",
 ]
+CORS_ALLOW_ALL_ORIGINS = False
 
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-# Agregar
+# CSRF_TRUSTED_ORIGINS
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://165.227.196.116:3000",
+    "http://134.122.24.38:3000",
     "https://ivanljubetic.sytes.net",
+    "http://ivanljubetic.sytes.net",
 ]
 
 REST_FRAMEWORK = {
