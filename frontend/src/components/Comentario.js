@@ -32,12 +32,12 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
     if (!archivoPath) return null;
     if (archivoPath.startsWith('http')) return archivoPath;
     if (archivoPath.startsWith('/media/')) {
-      return `http://localhost:8000${archivoPath}`;
+      return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
     if (archivoPath.startsWith('media/')) {
-      return `http://localhost:8000/${archivoPath}`;
+      return `https://escueladecuadros.sytes.net/${archivoPath}`;
     }
-    return `http://localhost:8000/media/${archivoPath}`;
+    return `https://escueladecuadros.sytes.net/media/${archivoPath}`;
   };
 
   return (
