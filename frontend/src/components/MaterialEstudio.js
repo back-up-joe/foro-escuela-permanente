@@ -38,7 +38,17 @@ function MaterialEstudio({ user, onLogout }) {
 
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
-    if (archivoPath.startsWith('http')) return archivoPath;
+
+    // Si la URL es completa (empieza con http), cambiar http a https
+    if (archivoPath.startsWith('http://')) {
+        return archivoPath.replace('http://', 'https://');
+    }
+
+    // Si es https, devolverla tal cual
+    if (archivoPath.startsWith('https://')) {
+        return archivoPath;
+    }
+
     if (archivoPath.startsWith('/media/')) {
       return `https://escueladecuadros.sytes.net${archivoPath}`;    }
     if (archivoPath.startsWith('media/')) {
@@ -47,9 +57,13 @@ function MaterialEstudio({ user, onLogout }) {
     return `https://escueladecuadros.sytes.net${archivoPath}`;
   };
 
-  const handleDownload = (archivoPath, nombreArchivo) => {
-    const url = getFileUrl(archivoPath);
-    window.open(url, '_blank');
+  const handleDownload = (material) => {
+    const url = getFileUrl(material.archivo);
+    if (url) {
+        window.open(url, '_blank');
+    } else {
+        setError('No se pudo obtener la URL del archivo');
+    }
   };
 
   return (
@@ -120,7 +134,7 @@ function MaterialEstudio({ user, onLogout }) {
                           </div>
                           <button
                             className="btn btn-primary btn-sm"
-                            onClick={() => handleDownload(material.archivo, material.nombre_archivo)}
+                            onClick={() => handleDownload(material)}
                           >
                             <i className="bi bi-download me-1"></i>
                             Descargar
