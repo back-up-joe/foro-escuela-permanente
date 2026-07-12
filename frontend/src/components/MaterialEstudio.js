@@ -16,7 +16,7 @@ function MaterialEstudio({ user, onLogout }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      const response = await fetch('http://localhost:8000/api/material-estudio/', {
+      const response = await fetch('http://134.122.24.38:8000/api/material-estudio/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -40,12 +40,11 @@ function MaterialEstudio({ user, onLogout }) {
     if (!archivoPath) return null;
     if (archivoPath.startsWith('http')) return archivoPath;
     if (archivoPath.startsWith('/media/')) {
-      return `http://localhost:8000${archivoPath}`;
-    }
+      return `http://134.122.24.38:8000${archivoPath}`;    }
     if (archivoPath.startsWith('media/')) {
-      return `http://localhost:8000/${archivoPath}`;
+      return `http://134.122.24.38:8000/${archivoPath}`;
     }
-    return `http://localhost:8000/media/${archivoPath}`;
+    return `http://134.122.24.38:8000/media/${archivoPath}`;
   };
 
   const handleDownload = (archivoPath, nombreArchivo) => {
