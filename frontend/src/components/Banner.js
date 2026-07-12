@@ -4,14 +4,14 @@ function Banner() {
   return (
     <div className="banner-foro">
       <img 
-        src="/images/banner-ivan-ljubetic3.png" 
+        src="/images/banner-foro2.png" 
         alt="Banner Escuela Cuadros" 
         className="img-fluid w-100"
         style={{ 
           display: 'block',
           width: '100%',
           height: 'auto',
-          maxHeight: '430px',
+          maxHeight: '380px',
           objectFit: 'cover'
         }}
       />

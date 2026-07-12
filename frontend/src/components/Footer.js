@@ -8,7 +8,7 @@ function Footer() {
       <div className="container">
         
         <p className="mb-0">
-          © {currentYear} - Escuela Permanente de Cuadros "Iván Ljubetic" - Comunal Ñuñoa
+          © {currentYear} - Escuela Permanente de Cuadros - Comunal Ñuñoa
         </p>
         <p className="mb-0 small">
           

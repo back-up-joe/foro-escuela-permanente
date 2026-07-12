@@ -33,7 +33,7 @@ function Login({ onLogin }) {
           alt="Logo Partido Comunista" 
           className="img-fluid"
         />
-        <h2 className="mb-4">Escuela de Cuadros "Iván Ljubetic"</h2>
+        <h2 className="mb-4">Escuela de Cuadros</h2>
         {error && (
           <div className="alert alert-danger" role="alert">
             {error}
