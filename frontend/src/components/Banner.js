@@ -4,7 +4,7 @@ function Banner() {
   return (
     <div className="banner-foro">
       <img 
-        src="/images/banner-foro2.png" 
+        src="/images/banner-final.png" 
         alt="Banner Escuela Cuadros" 
         className="img-fluid w-100"
         style={{ 
