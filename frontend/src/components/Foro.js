@@ -84,7 +84,7 @@ function Foro({ user, onLogout }) {
               <h2>
                 <i className="bi bi-chat-dots me-2"></i>
                 Foro</h2>
-              <p className="text-muted">Comparte comentarios y documentos</p>
+              <p className="text-muted">Compartir comentarios y documentos</p>
             </div>
 
             {/* Formulario de nuevo comentario */}
@@ -95,7 +95,7 @@ function Foro({ user, onLogout }) {
                     <textarea
                       className="form-control"
                       rows="3"
-                      placeholder="Escribe tu comentario..."
+                      placeholder="Escribir comentario..."
                       value={nuevoComentario}
                       onChange={(e) => setNuevoComentario(e.target.value)}
                     />
@@ -107,7 +107,7 @@ function Foro({ user, onLogout }) {
                       accept=".pdf"
                       onChange={(e) => setArchivo(e.target.files[0])}
                     />
-                    <small className="text-muted">PDF máximo 10MB</small>
+                    <small className="text-muted">PDF máximo 20MB</small>
                   </div>
                   {error && (
                     <div className="alert alert-danger">{error}</div>
@@ -126,7 +126,7 @@ function Foro({ user, onLogout }) {
             {/* Lista de comentarios */}
             {comentarios.length === 0 ? (
               <div className="text-center text-muted py-5">
-                <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+                <p>No hay comentarios aún.</p>
               </div>
             ) : (
               comentarios.map((comentario) => (
