@@ -31,13 +31,45 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
     if (archivoPath.startsWith('http')) return archivoPath;
+
+    {/*
     if (archivoPath.startsWith('/media/')) {
       return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
     if (archivoPath.startsWith('media/')) {
       return `https://escueladecuadros.sytes.net/${archivoPath}`;
     }
-    return `https://escueladecuadros.sytes.net/media/${archivoPath}`;
+    return `https://escueladecuadros.sytes.net/media/${archivoPath}`;/ */}
+
+    const getFileUrl = (archivoPath) => {
+  if (!archivoPath) return null;
+  if (archivoPath.startsWith('http')) return archivoPath;
+  
+  // Normalizar la ruta
+  let cleanPath = archivoPath;
+  // Eliminar /media/ o media/ si existe
+  if (cleanPath.startsWith('/media/')) {
+    cleanPath = cleanPath.substring(7);
+  } else if (cleanPath.startsWith('media/')) {
+    cleanPath = cleanPath.substring(6);
+  }
+  
+  // Asegurar que la ruta comience con /
+  if (!cleanPath.startsWith('/')) {
+    cleanPath = '/' + cleanPath;
+  }
+  
+  // Para archivos en /opt/media/
+  return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+};
+
+
+
+
+
+
+
+
   };
 
   return (
