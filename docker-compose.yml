@@ -32,7 +32,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-      - backend_media:/app/media
+      #- backend_media:/app/media
+      - ./media:/app/media
     depends_on:
       db:
         condition: service_healthy
