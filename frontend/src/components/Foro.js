@@ -45,7 +45,7 @@ function Foro({ user, onLogout }) {
       setArchivo(null);
       await cargarComentarios();
     } catch (err) {
-      setError('Error. Debes escribir comentario.');
+      setError('Debes escribir comentario.');
       console.error(err);
     } finally {
       setLoading(false);
