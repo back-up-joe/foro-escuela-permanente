@@ -39,23 +39,38 @@ function MaterialEstudio({ user, onLogout }) {
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
 
-    // Si la URL es completa (empieza con http), cambiar http a https
+    // Si ya es URL completa, devolverla
     if (archivoPath.startsWith('http://')) {
         return archivoPath.replace('http://', 'https://');
     }
-
-    // Si es https, devolverla tal cual
     if (archivoPath.startsWith('https://')) {
         return archivoPath;
     }
 
+    // Si el path ya comienza con /media/, usarlo directamente
     if (archivoPath.startsWith('/media/')) {
-      return `https://escueladecuadros.sytes.net${archivoPath}`;    }
-    if (archivoPath.startsWith('media/')) {
-      return `https://escueladecuadros.sytes.net${archivoPath}`;
+        return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
-    return `https://escueladecuadros.sytes.net${archivoPath}`;
-  };
+
+    // Para rutas como "material_estudio/archivo.pdf" o "comentarios/archivo.pdf"
+    // Asegurar que la ruta comience con /
+    let cleanPath = archivoPath;
+    
+    // Eliminar posibles prefijos
+    if (cleanPath.startsWith('media/')) {
+        cleanPath = cleanPath.substring(6);
+    }
+    if (cleanPath.startsWith('/app/media/')) {
+        cleanPath = cleanPath.substring(10);
+    }
+    
+    // Asegurar que la ruta comience con /
+    if (!cleanPath.startsWith('/')) {
+        cleanPath = '/' + cleanPath;
+    }
+
+    return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+};
 
   const handleDownload = (material) => {
     const url = getFileUrl(material.archivo);

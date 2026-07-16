@@ -27,37 +27,41 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
     setMostrarFormulario(false);
   };
 
-  // Función para obtener la URL completa del archivo
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
-    if (archivoPath.startsWith('http')) return archivoPath;
 
-    {/*
+    // Si ya es URL completa, devolverla
+    if (archivoPath.startsWith('http://')) {
+        return archivoPath.replace('http://', 'https://');
+    }
+    if (archivoPath.startsWith('https://')) {
+        return archivoPath;
+    }
+
+    // Si el path ya comienza con /media/, usarlo directamente
     if (archivoPath.startsWith('/media/')) {
-      return `https://escueladecuadros.sytes.net${archivoPath}`;
+        return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
-    if (archivoPath.startsWith('media/')) {
-      return `https://escueladecuadros.sytes.net/${archivoPath}`;
-    }
-    return `https://escueladecuadros.sytes.net/media/${archivoPath}`;/ */}
-  
-    // Normalizar la ruta
+
+    // Para rutas como "material_estudio/archivo.pdf" o "comentarios/archivo.pdf"
+    // Asegurar que la ruta comience con /
     let cleanPath = archivoPath;
-    // Eliminar /media/ o media/ si existe
-    if (cleanPath.startsWith('/media/')) {
-      cleanPath = cleanPath.substring(6);
-    } else if (cleanPath.startsWith('media/')) {
-      cleanPath = cleanPath.substring(6);
+    
+    // Eliminar posibles prefijos
+    if (cleanPath.startsWith('media/')) {
+        cleanPath = cleanPath.substring(6);
     }
-  
+    if (cleanPath.startsWith('/app/media/')) {
+        cleanPath = cleanPath.substring(10);
+    }
+    
     // Asegurar que la ruta comience con /
     if (!cleanPath.startsWith('/')) {
-      cleanPath = '/' + cleanPath;
+        cleanPath = '/' + cleanPath;
     }
-  
-    // Para archivos en /opt/media/
+
     return `https://escueladecuadros.sytes.net/media${cleanPath}`;
-  };
+};
 
   return (
     <div className="comentario-card">
