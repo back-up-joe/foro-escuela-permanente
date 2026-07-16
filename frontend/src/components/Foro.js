@@ -45,7 +45,7 @@ function Foro({ user, onLogout }) {
       setArchivo(null);
       await cargarComentarios();
     } catch (err) {
-      setError('Debes escribir comentario.');
+      setError('Debes escribir comentario o el archivo adjunto es demasiado grande (máx 20MB)');
       console.error(err);
     } finally {
       setLoading(false);
