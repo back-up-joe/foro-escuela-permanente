@@ -28,7 +28,7 @@ function Foro({ user, onLogout }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!nuevoComentario.trim() && !archivo) {
-      setError('Debes escribir un comentario o subir un archivo');
+      setError('Debes escribir un comentario');
       return;
     }
 
