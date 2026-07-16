@@ -40,36 +40,23 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
       return `https://escueladecuadros.sytes.net/${archivoPath}`;
     }
     return `https://escueladecuadros.sytes.net/media/${archivoPath}`;/ */}
-
-    const getFileUrl = (archivoPath) => {
-  if (!archivoPath) return null;
-  if (archivoPath.startsWith('http')) return archivoPath;
   
-  // Normalizar la ruta
-  let cleanPath = archivoPath;
-  // Eliminar /media/ o media/ si existe
-  if (cleanPath.startsWith('/media/')) {
-    cleanPath = cleanPath.substring(7);
-  } else if (cleanPath.startsWith('media/')) {
-    cleanPath = cleanPath.substring(6);
-  }
+    // Normalizar la ruta
+    let cleanPath = archivoPath;
+    // Eliminar /media/ o media/ si existe
+    if (cleanPath.startsWith('/media/')) {
+      cleanPath = cleanPath.substring(6);
+    } else if (cleanPath.startsWith('media/')) {
+      cleanPath = cleanPath.substring(6);
+    }
   
-  // Asegurar que la ruta comience con /
-  if (!cleanPath.startsWith('/')) {
-    cleanPath = '/' + cleanPath;
-  }
+    // Asegurar que la ruta comience con /
+    if (!cleanPath.startsWith('/')) {
+      cleanPath = '/' + cleanPath;
+    }
   
-  // Para archivos en /opt/media/
-  return `https://escueladecuadros.sytes.net/media${cleanPath}`;
-};
-
-
-
-
-
-
-
-
+    // Para archivos en /opt/media/
+    return `https://escueladecuadros.sytes.net/media${cleanPath}`;
   };
 
   return (
