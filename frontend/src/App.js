@@ -64,49 +64,52 @@ function App() {
           path="/foro" 
           element={
             isAuthenticated ? 
-            <Foro user={user} onLogout={handleLogout} /> : 
+            <Layout user={user} onLogout={handleLogout}>
+              <Foro user={user} onLogout={handleLogout} />
+            </Layout>:
             <Navigate to="/login" replace />
           } 
         />
         <Route 
           path="/material-estudio" 
           element={
-            isAuthenticated ? 
-            <MaterialEstudio user={user} onLogout={handleLogout} /> : 
+            isAuthenticated ?
+            <Layout user={user} onLogout={handleLogout}>
+              <MaterialEstudio user={user} onLogout={handleLogout} />
+            </Layout>: 
             <Navigate to="/login" replace />
           } 
         />
-
-<Route 
-  path="/informes" 
-  element={
-    isAuthenticated ? 
-    <Layout user={user} onLogout={handleLogout}>
-      <Informes user={user} onLogout={handleLogout} />
-    </Layout> : 
-    <Navigate to="/login" replace />
-  } 
-/>
-<Route 
-  path="/enlaces" 
-  element={
-    isAuthenticated ? 
-    <Layout user={user} onLogout={handleLogout}>
-      <Enlaces user={user} onLogout={handleLogout} />
-    </Layout> : 
-    <Navigate to="/login" replace />
-  } 
-/>
-<Route 
-  path="/cronograma" 
-  element={
-    isAuthenticated ? 
-    <Layout user={user} onLogout={handleLogout}>
-      <Cronograma user={user} onLogout={handleLogout} />
-    </Layout> : 
-    <Navigate to="/login" replace />
-  } 
-/>
+        <Route 
+          path="/informes" 
+          element={
+            isAuthenticated ? 
+            <Layout user={user} onLogout={handleLogout}>
+              <Informes user={user} onLogout={handleLogout} />
+            </Layout> : 
+            <Navigate to="/login" replace />
+          } 
+        />
+        <Route 
+          path="/enlaces" 
+          element={
+            isAuthenticated ? 
+            <Layout user={user} onLogout={handleLogout}>
+              <Enlaces user={user} onLogout={handleLogout} />
+            </Layout> : 
+            <Navigate to="/login" replace />
+          } 
+        />
+        <Route 
+          path="/cronograma" 
+          element={
+            isAuthenticated ? 
+            <Layout user={user} onLogout={handleLogout}>
+              <Cronograma user={user} onLogout={handleLogout} />
+            </Layout> : 
+            <Navigate to="/login" replace />
+          } 
+        /> 
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
