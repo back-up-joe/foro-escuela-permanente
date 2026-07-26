@@ -8,6 +8,10 @@ function MaterialEstudio({ user, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Para desarrollo local
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+  const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
+  
   useEffect(() => {
     cargarMateriales();
   }, []);
@@ -16,7 +20,18 @@ function MaterialEstudio({ user, onLogout }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
+      /*
       const response = await fetch('https://escueladecuadros.sytes.net/api/material-estudio/', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }); 
+      
+      COMENTAR PARA LOCAL
+      
+      */
+
+      const response = await fetch(`${API_URL}material-estudio/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -39,18 +54,36 @@ function MaterialEstudio({ user, onLogout }) {
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
 
-    // Si ya es URL completa, devolverla
+    // Si ya es URL completa, devolverla (Descomentar para producción)
+    /*
     if (archivoPath.startsWith('http://')) {
         return archivoPath.replace('http://', 'https://');
+    }*/
+
+    // Comentar para producción
+    if (archivoPath.startsWith('http://')) {
+        return archivoPath;
     }
+
     if (archivoPath.startsWith('https://')) {
         return archivoPath;
     }
 
     // Si el path ya comienza con /media/, usarlo directamente
+    /*
     if (archivoPath.startsWith('/media/')) {
         return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
+    COMENTAR PARA LOCAL    
+    */
+
+    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
+
+    if (archivoPath.startsWith('/media/')) {
+        return `${baseUrl}${archivoPath}`;
+    }
+
+    ////////////////////////////////////////////////////////////////////////
 
     // Para rutas como "material_estudio/archivo.pdf" o "comentarios/archivo.pdf"
     // Asegurar que la ruta comience con /
@@ -69,7 +102,9 @@ function MaterialEstudio({ user, onLogout }) {
         cleanPath = '/' + cleanPath;
     }
 
-    return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+    //return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+    // Para desarrollo local
+    return `${baseUrl}/media${cleanPath}`;
 };
 
   const handleDownload = (material) => {

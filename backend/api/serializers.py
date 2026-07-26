@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -81,3 +81,44 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
             else:
                 return f"{size / (1024 * 1024):.2f} MB"
         return "0 B"
+
+class InformeSerializer(serializers.ModelSerializer):
+    usuario = UserSerializer(read_only=True)
+    nombre_archivo = serializers.SerializerMethodField()
+    tamaño_archivo = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Informe
+        fields = ['id', 'usuario', 'titulo', 'descripcion', 'archivo', 
+                  'nombre_archivo', 'tamaño_archivo', 'fecha_subida']
+        read_only_fields = ['fecha_subida', 'fecha_actualizacion']
+    
+    def get_nombre_archivo(self, obj):
+        return obj.archivo.name.split('/')[-1]
+    
+    def get_tamaño_archivo(self, obj):
+        if obj.archivo:
+            size = obj.archivo.size
+            if size < 1024:
+                return f"{size} B"
+            elif size < 1024 * 1024:
+                return f"{size / 1024:.2f} KB"
+            else:
+                return f"{size / (1024 * 1024):.2f} MB"
+        return "0 B"
+
+
+class EnlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enlace
+        fields = ['id', 'titulo', 'descripcion', 'url', 'activo', 'orden', 'fecha_creacion']
+        read_only_fields = ['id', 'fecha_creacion']
+
+class CronogramaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cronograma
+        fields = ['id', 'nivel', 'mes', 'modulo', 'sesion', 'tipo', 
+                  'dia', 'fecha', 'semana_calendario', 'semana_numero',
+                  'inicio', 'termino', 'relator', 'trabajo', 'entrega']
+        read_only_fields = ['id']
+

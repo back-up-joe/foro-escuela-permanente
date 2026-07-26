@@ -10,6 +10,30 @@ function Footer() {
         <p className="mb-0">
           © {currentYear} - Escuela Permanente de Cuadros - Comunal Ñuñoa
         </p>
+
+        <p className="mb-0 small mt-2">
+          
+          <a
+            href="https://linternadepapel.cl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white text-decoration-none"
+
+          >
+            linternadepapel.cl
+          </a>
+          {' | '}
+          <a
+            href="https://resistenciainformativa.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white text-decoration-none"
+
+          >
+            resistenciainformativa.org
+          </a>
+        </p>
+
         <p className="mb-0 small">
           
         </p>

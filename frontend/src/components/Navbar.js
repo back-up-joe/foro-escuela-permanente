@@ -18,8 +18,7 @@ function Navbar({ user, onLogout }) {
             alt="Logo" 
             height="40" 
             className="d-inline-block align-top me-2"
-          />
-          
+          />          
         </Link>
         <button 
           className="navbar-toggler" 
@@ -29,6 +28,7 @@ function Navbar({ user, onLogout }) {
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
+          style={{ marginLeft: '20%' }}  // <-- DESPLAZAR HAMBURGUESA 20% AL CENTRO
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -40,18 +40,45 @@ function Navbar({ user, onLogout }) {
                 Foro
               </Link>
             </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="/informes">
+                <i className="bi bi-file-earmark-pdf me-1"></i>
+                Informes
+              </Link>
+            </li>
+
+            
+
+            
+            <li className="nav-item">
+              <Link className="nav-link" to="/enlaces">
+                <i className="bi bi-link-45deg me-1"></i>
+                Sesiones
+              </Link>
+            </li>
+
             <li className="nav-item">
               <Link className="nav-link" to="/material-estudio">
                 <i className="bi bi-book me-1"></i>
                 Material de Estudio
               </Link>
             </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to="/cronograma">
+                <i className="bi bi-calendar me-1"></i>
+                Cronograma
+              </Link>
+            </li>
+
             <li className="nav-item">
               <span className="nav-link">
                 <i className="bi bi-person-circle me-1"></i>
                 {user?.username || 'Usuario'}
               </span>
             </li>
+            
             <li className="nav-item">
               <button 
                 className="nav-link btn btn-link" 
@@ -62,6 +89,7 @@ function Navbar({ user, onLogout }) {
                 Cerrar Sesión
               </button>
             </li>
+
           </ul>
         </div>
       </div>

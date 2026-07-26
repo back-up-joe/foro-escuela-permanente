@@ -59,3 +59,35 @@ export const likeRespuesta = async (id) => {
 };
 
 export default api;
+
+//////////////////////////////////// Informes
+export const getInformes = async () => {
+  const response = await api.get('informes/');
+  return response.data;
+};
+
+export const createInforme = async (data) => {
+  const formData = new FormData();
+  formData.append('titulo', data.titulo);
+  formData.append('descripcion', data.descripcion || '');
+  formData.append('archivo', data.archivo);
+  
+  const response = await api.post('informes/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+////////////////////////////////////// Enlaces
+export const getEnlaces = async () => {
+  const response = await api.get('enlaces/');
+  return response.data;
+};
+
+/////////////////////////////////////// Cronograma
+export const getCronograma = async () => {
+  const response = await api.get('cronograma/');
+  return response.data;
+};

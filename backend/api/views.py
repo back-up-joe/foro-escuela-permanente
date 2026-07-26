@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio
-from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma
+from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -119,3 +119,25 @@ class MaterialEstudioViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # Solo mostrar materiales activos
         return MaterialEstudio.objects.filter(activo=True).order_by('orden', '-fecha_subida')
+
+class InformeViewSet(viewsets.ModelViewSet):
+    queryset = Informe.objects.all()
+    serializer_class = InformeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+class EnlaceViewSet(viewsets.ModelViewSet):
+    queryset = Enlace.objects.filter(activo=True)
+    serializer_class = EnlaceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        # Solo mostrar enlaces activos
+        return Enlace.objects.filter(activo=True).order_by('orden', '-fecha_creacion')
+
+class CronogramaViewSet(viewsets.ModelViewSet):
+    queryset = Cronograma.objects.all()
+    serializer_class = CronogramaSerializer
+    permission_classes = [permissions.IsAuthenticated]

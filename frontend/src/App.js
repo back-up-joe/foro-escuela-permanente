@@ -3,7 +3,25 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './components/Login';
 import Foro from './components/Foro';
 import MaterialEstudio from './components/MaterialEstudio';
+
+import Informes from './components/Informes';
+import Enlaces from './components/Enlaces';
+import Cronograma from './components/Cronograma';
+import SubNavbar from './components/SubNavbar';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Componente Layout para páginas con SubNavbar
+// function Layout({ children, user, onLogout }) {
+
+function Layout({ children}) {
+  return (
+    <>
+      <SubNavbar />
+      {children}
+    </>
+  );
+}
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,6 +76,37 @@ function App() {
             <Navigate to="/login" replace />
           } 
         />
+
+<Route 
+  path="/informes" 
+  element={
+    isAuthenticated ? 
+    <Layout user={user} onLogout={handleLogout}>
+      <Informes user={user} onLogout={handleLogout} />
+    </Layout> : 
+    <Navigate to="/login" replace />
+  } 
+/>
+<Route 
+  path="/enlaces" 
+  element={
+    isAuthenticated ? 
+    <Layout user={user} onLogout={handleLogout}>
+      <Enlaces user={user} onLogout={handleLogout} />
+    </Layout> : 
+    <Navigate to="/login" replace />
+  } 
+/>
+<Route 
+  path="/cronograma" 
+  element={
+    isAuthenticated ? 
+    <Layout user={user} onLogout={handleLogout}>
+      <Cronograma user={user} onLogout={handleLogout} />
+    </Layout> : 
+    <Navigate to="/login" replace />
+  } 
+/>
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>

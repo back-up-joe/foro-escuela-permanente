@@ -89,3 +89,7 @@ Thumbs.db
 *.crt
 *.csr
 *.srl
+
+# Django migrations (excluir archivos de migración)
+**/migrations/*.py
+!**/migrations/__init__.py
