@@ -16,20 +16,20 @@ function Cronograma({ user, onLogout }) {
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      /*
+      
       const response = await fetch('https://escueladecuadros.sytes.net/api/cronograma/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
         
-      COMENTAR PARA ENTORNO LOCAL
+      /*COMENTAR PARA ENTORNO LOCAL
         
         */
-      
+      /*
       const response = await fetch('http://localhost:8000/api/cronograma/', {
         headers: {
           'Authorization': `Bearer ${token}`,
-        },
+        },*/
       
       });
       

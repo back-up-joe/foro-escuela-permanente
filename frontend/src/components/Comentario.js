@@ -9,11 +9,11 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
 
   
   /* Entorno local */
-  const API_BASE_URL = 'http://127.0.0.1:8000';
+  // const API_BASE_URL = 'http://127.0.0.1:8000';
   
   
-  /* Producción
-  const API_BASE_URL = 'https://escueladecuadros.sytes.net'; */
+  // Producción
+  const API_BASE_URL = 'https://escueladecuadros.sytes.net';
 
   const handleLike = () => {
     onLike(comentario.id);
@@ -39,28 +39,30 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
     if (!archivoPath) return null;
 
     // Si ya es URL completa, devolverla (Descomentar para producción)
-    /*
     if (archivoPath.startsWith('http://')) {
         return archivoPath.replace('http://', 'https://');
-    }*/
+    }
 
+    // para local
+    /*
     if (archivoPath.startsWith('http://')) {
         return archivoPath;
-    }
+    }*/
 
     if (archivoPath.startsWith('https://')) {
         return archivoPath;
     }
 
-    // Si el path ya comienza con /media/, usarlo directamente
-    /*
+    // Si el path ya comienza con /media/, usarlo directamente PRODUCCIÓN
     if (archivoPath.startsWith('/media/')) {
         return `https://escueladecuadros.sytes.net${archivoPath}`;
-    }*/
+    }
 
+    //Local
+    /*
     if (archivoPath.startsWith('/media/')) {
         return `${API_BASE_URL}${archivoPath}`;
-    }
+    }*/
 
     // Para rutas como "material_estudio/archivo.pdf" o "comentarios/archivo.pdf"
     // Asegurar que la ruta comience con /
@@ -79,9 +81,9 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
         cleanPath = '/' + cleanPath;
     }
 
-    // return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+    return `https://escueladecuadros.sytes.net/media${cleanPath}`;
 
-    return `${API_BASE_URL}/media${cleanPath}`;
+    // return `${API_BASE_URL}/media${cleanPath}`;
 };
 
   return (

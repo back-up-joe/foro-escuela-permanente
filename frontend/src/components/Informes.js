@@ -74,33 +74,35 @@ function Informes({ user, onLogout }) {
   const getFileUrl = (archivoPath) => {
     if (!archivoPath) return null;
     
-    /* Descomentar para producción
+    /* Descomentar para producción */
     if (archivoPath.startsWith('http://')) {
       return archivoPath.replace('http://', 'https://');
-    } */
+    }
 
     // Comentar para producción
+    /*
     if (archivoPath.startsWith('http://')) {
       return archivoPath;
-    }
+    }*/
   
     if (archivoPath.startsWith('https://')) {
       return archivoPath;
     }
-    /*
+    
     if (archivoPath.startsWith('/media/')) {
       return `https://escueladecuadros.sytes.net${archivoPath}`;
     }
-    COMENTAR PARA LOCAL  
+    /* COMENTAR PARA LOCAL  
     */
 
     // Usar la URL base desde variables de entorno
+    /*
     const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
     
     // Si el path ya comienza con /media/, usarlo directamente
     if (archivoPath.startsWith('/media/')) {
       return `${baseUrl}${archivoPath}`;
-    }
+    }*/
 
     let cleanPath = archivoPath;
     if (cleanPath.startsWith('media/')) {
@@ -110,8 +112,8 @@ function Informes({ user, onLogout }) {
       cleanPath = '/' + cleanPath;
     }
     
-    //return `https://escueladecuadros.sytes.net/media${cleanPath}`;
-    return `${baseUrl}/media${cleanPath}`;
+    return `https://escueladecuadros.sytes.net/media${cleanPath}`;
+    //return `${baseUrl}/media${cleanPath}`;
   };
 
   const handleDownload = (informe) => {
