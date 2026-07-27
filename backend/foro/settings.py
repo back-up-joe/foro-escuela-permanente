@@ -150,6 +150,12 @@ if DEBUG:
 # settings.py para local development
 from datetime import timedelta
 
+# Local pruebas
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),  # 10 minutos para pruebas
+}
+
+# Producción
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # El token dura 7 días
 }
