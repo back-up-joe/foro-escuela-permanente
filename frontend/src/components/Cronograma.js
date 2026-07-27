@@ -102,7 +102,11 @@ function Cronograma({ user, onLogout }) {
                             {item.tipo}
                           </span>
                         </td>
-                        <td>{new Date(item.fecha).toLocaleDateString('es-CL')}</td>
+                        {/*
+                        <td>{new Date(item.fecha).toLocaleDateString('es-CL')}</td> */}
+                        <td>{item.fecha.split('-').reverse().join('/')}</td>
+
+
                         <td>
                           {item.inicio && item.termino ? 
                             `${item.inicio.substring(0,5)} - ${item.termino.substring(0,5)}` : 
