@@ -1,11 +1,14 @@
+from urllib import request
+
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma
-from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession
+from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer, ChatMessageSerializer, ChatSessionSerializer
+from .services.chatbot import ChatbotService
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
@@ -141,3 +144,117 @@ class CronogramaViewSet(viewsets.ModelViewSet):
     queryset = Cronograma.objects.all()
     serializer_class = CronogramaSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class ChatSessionViewSet(viewsets.ModelViewSet):
+    serializer_class = ChatSessionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return ChatSession.objects.filter(usuario=self.request.user, activo=True)
+    
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
+class ChatMessageViewSet(viewsets.ModelViewSet):
+    serializer_class = ChatMessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return ChatMessage.objects.filter(sesion__usuario=self.request.user)
+
+    @action(detail=False, methods=['post'])
+    def send(self, request):
+        sesion_id = request.data.get('sesion_id')
+        mensaje = request.data.get('mensaje')
+    
+        if not mensaje:
+            return Response({'error': 'El mensaje es requerido'}, status=400)
+    
+        # Obtener o crear sesión
+        if sesion_id:
+            try:
+                sesion = ChatSession.objects.get(id=sesion_id, usuario=request.user)
+            except ChatSession.DoesNotExist:
+                return Response({'error': 'Sesión no encontrada'}, status=404)
+        else:
+            sesion = ChatSession.objects.create(usuario=request.user, titulo=mensaje[:50])
+    
+        # Guardar mensaje del usuario
+        ChatMessage.objects.create(
+            sesion=sesion,
+            rol='usuario',
+            contenido=mensaje
+        )
+    
+        # ✅ CORREGIR: Convertir 'rol' → 'role' y 'contenido' → 'content'
+        historial_db = sesion.mensajes.values('rol', 'contenido')
+        historial = []
+        for msg in historial_db:
+            rol = 'user' if msg['rol'] == 'usuario' else 'assistant'
+            historial.append({
+                'role': rol,
+                'content': msg['contenido']
+            })
+    
+        # Llamar al chatbot
+        chatbot = ChatbotService()
+        respuesta = chatbot.send_message(historial)
+    
+        if respuesta:
+            assistant_msg = ChatMessage.objects.create(
+                sesion=sesion,
+                rol='asistente',
+                contenido=respuesta
+            )
+            return Response({
+                'sesion_id': sesion.id,
+                'mensaje': ChatMessageSerializer(assistant_msg).data
+            })
+        else:
+            return Response({'error': 'No se pudo obtener respuesta del chatbot'}, status=500)
+    
+    '''
+    @action(detail=False, methods=['post'])
+    def send(self, request):
+        sesion_id = request.data.get('sesion_id')
+        mensaje = request.data.get('mensaje')
+        
+        if not mensaje:
+            return Response({'error': 'El mensaje es requerido'}, status=400)
+        
+        # Obtener o crear sesión
+        if sesion_id:
+            try:
+                sesion = ChatSession.objects.get(id=sesion_id, usuario=request.user)
+            except ChatSession.DoesNotExist:
+                return Response({'error': 'Sesión no encontrada'}, status=404)
+        else:
+            sesion = ChatSession.objects.create(usuario=request.user, titulo=mensaje[:50])
+        
+        # Guardar mensaje del usuario
+        user_msg = ChatMessage.objects.create(
+            sesion=sesion,
+            rol='usuario',
+            contenido=mensaje
+        )
+        
+        # Obtener historial de la sesión
+        historial = list(sesion.mensajes.values('rol', 'contenido'))
+        
+        # Llamar al chatbot
+        chatbot = ChatbotService()
+        respuesta = chatbot.send_message(historial)
+        
+        if respuesta:
+            assistant_msg = ChatMessage.objects.create(
+                sesion=sesion,
+                rol='asistente',
+                contenido=respuesta
+            )
+            return Response({
+                'sesion_id': sesion.id,
+                'mensaje': ChatMessageSerializer(assistant_msg).data
+            })
+        else:
+            return Response({'error': 'No se pudo obtener respuesta del chatbot'}, status=500)
+        '''

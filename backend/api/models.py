@@ -150,3 +150,38 @@ class Cronograma(models.Model):
         ordering = ['fecha', 'nivel']
         verbose_name = 'Cronograma'
         verbose_name_plural = 'Cronograma'
+
+class ChatSession(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=200, blank=True, default='Nueva conversación')
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+    activo = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['-actualizado']
+        verbose_name = 'Sesión de Chat'
+        verbose_name_plural = 'Sesiones de Chat'
+    
+    def __str__(self):
+        return f"{self.usuario.username} - {self.creado.strftime('%d/%m/%Y %H:%M')}"
+
+class ChatMessage(models.Model):
+    ROL_CHOICES = [
+        ('usuario', 'Usuario'),
+        ('asistente', 'Asistente'),
+        ('sistema', 'Sistema'),
+    ]
+    
+    sesion = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='mensajes')
+    rol = models.CharField(max_length=10, choices=ROL_CHOICES)
+    contenido = models.TextField()
+    creado = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['creado']
+        verbose_name = 'Mensaje de Chat'
+        verbose_name_plural = 'Mensajes de Chat'
+    
+    def __str__(self):
+        return f"{self.rol} - {self.creado.strftime('%d/%m/%Y %H:%M')}"

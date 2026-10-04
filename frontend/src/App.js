@@ -4,6 +4,8 @@ import Login from './components/Login';
 import Foro from './components/Foro';
 import MaterialEstudio from './components/MaterialEstudio';
 
+import ChatBot from './components/ChatBot';
+
 import Informes from './components/Informes';
 import Enlaces from './components/Enlaces';
 import Cronograma from './components/Cronograma';
@@ -14,11 +16,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Componente Layout para páginas con SubNavbar
 // function Layout({ children, user, onLogout }) {
 
-function Layout({ children}) {
+function Layout({ children, user, onLogout }) {
   return (
     <>
       <SubNavbar />
       {children}
+      <ChatBot user={user} />
     </>
   );
 }
