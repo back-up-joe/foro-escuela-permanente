@@ -7,7 +7,18 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [errorRespuesta, setErrorRespuesta] = useState('');
 
-  
+  const [expandido, setExpandido] = useState(false); // Estado para controlar si el contenido está expandido o no
+
+  // NUEVO: Configuración de plegado
+  const MAX_CARACTERES = 300;  // Caracteres antes de plegar
+
+  const MAX_CARACTERES_RESPUESTA = 1000;    // NUEVO: Límite de la respuesta
+
+  const contenidoLargo = comentario.contenido && comentario.contenido.length > MAX_CARACTERES;
+  const contenidoMostrar = expandido || !contenidoLargo
+    ? comentario.contenido
+    : comentario.contenido.substring(0, MAX_CARACTERES) + '...';
+
   /* Entorno local */
   // const API_BASE_URL = 'http://127.0.0.1:8000';
   
@@ -25,6 +36,12 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
     // Validación: el contenido de la respuesta no puede estar vacío
     if (!respuestaContenido.trim()) {
       setErrorRespuesta('El comentario no puede estar vacío');
+      return;
+    }
+
+    // Validar longitud máxima
+    if (respuestaContenido.length > MAX_CARACTERES_RESPUESTA) {
+      setErrorRespuesta(`La respuesta no puede superar los ${MAX_CARACTERES_RESPUESTA} caracteres`);
       return;
     }
     
@@ -97,9 +114,36 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
         </span>
       </div>
       
+      {/* CONTENIDO CON PLEGADO */}
+      <div className="comentario-contenido">
+        <div className={`comentario-texto ${!expandido && contenidoLargo ? 'plegado' : ''}`}>
+          {contenidoMostrar}
+        </div>
+        
+        {contenidoLargo && (
+          <button
+            className="btn-ver-mas"
+            onClick={() => setExpandido(!expandido)}
+          >
+            {expandido ? (
+              <>
+                <i className="bi bi-chevron-up me-1"></i>
+                Ver menos
+              </>
+            ) : (
+              <>
+                <i className="bi bi-chevron-down me-1"></i>
+                Ver más
+              </>
+            )}
+          </button>
+        )}
+      </div>
+
+      {/*
       <div className="comentario-contenido">
         {comentario.contenido}
-      </div>
+      </div> */}
 
       {comentario.archivo && (
         <div className="mt-2 mb-2">
@@ -147,7 +191,7 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
         </button>
       </div>
 
-      {/* Formulario de respuesta */}
+      {/* Formulario de respuesta CON LÍMITE */}
       {mostrarFormulario && (
         <form onSubmit={handleResponder} className="mt-3">
           <div className="mb-2">
@@ -158,23 +202,37 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
                 placeholder="Escribe tu respuesta..."
                 value={respuestaContenido}
                 onChange={(e) => {
-                  setRespuestaContenido(e.target.value);
-                  if (errorRespuesta) setErrorRespuesta('');
+                  // ✅ Limitar entrada a MAX_CARACTERES_RESPUESTA
+                  if (e.target.value.length <= MAX_CARACTERES_RESPUESTA) {
+                    setRespuestaContenido(e.target.value);
+                    if (errorRespuesta) setErrorRespuesta('');
+                  }
                 }}
+                maxLength={MAX_CARACTERES_RESPUESTA}  // ✅ Límite HTML
               />
               <button type="submit" className="btn btn-primary">
                 Responder
               </button>
             </div>
-            {errorRespuesta && (
-              <div className="text-danger small mt-1">
-                {errorRespuesta}
-              </div>
-            )}
+
+            {/* ✅ NUEVO: Contador de caracteres y error */}
+            <div className="d-flex justify-content-between align-items-center mt-1">
+              {errorRespuesta && (
+                <div className="text-danger small">{errorRespuesta}</div>
+              )}
+              <small className={`ms-auto ${
+                respuestaContenido.length > MAX_CARACTERES_RESPUESTA * 0.9 
+                  ? 'text-danger fw-bold' 
+                  : 'text-muted'
+              }`}>
+                {respuestaContenido.length} / {MAX_CARACTERES_RESPUESTA}
+              </small>
+            </div>
           </div>
+
           <div className="text-end">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="btn btn-sm btn-outline-secondary"
               onClick={() => {
                 setMostrarFormulario(false);
