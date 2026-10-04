@@ -12,6 +12,9 @@ function Foro({ user, onLogout }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // NUEVO: Límite de caracteres
+  const MAX_CARACTERES = 2000;
+  
   useEffect(() => {
     cargarComentarios();
   }, []);
@@ -27,6 +30,13 @@ function Foro({ user, onLogout }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validar longitud
+    if (nuevoComentario.length > MAX_CARACTERES) {
+      setError(`El comentario no puede superar los ${MAX_CARACTERES} caracteres`);
+      return;
+    }
+
     if (!nuevoComentario.trim() && !archivo) {
       setError('Debes escribir un comentario');
       return;
@@ -97,11 +107,26 @@ function Foro({ user, onLogout }) {
                       rows="3"
                       placeholder="Escribir comentario..."
                       value={nuevoComentario}
-                      onChange={(e) => setNuevoComentario(e.target.value)}
+                      onChange={(e) => {
+                        // Limitar entrada a MAX_CARACTERES
+                        if (e.target.value.length <= MAX_CARACTERES) {
+                          setNuevoComentario(e.target.value);
+                          if (error) setError('');
+                        }
+                      }}
+                      maxLength={MAX_CARACTERES}
                     />
+                    {/* NUEVO: Contador de caracteres */}
+                    <div className="d-flex justify-content-end mt-1">
+                      <small className={nuevoComentario.length > MAX_CARACTERES * 0.9 ? 'text-danger' : 'text-muted'}>
+                        {nuevoComentario.length} / {MAX_CARACTERES}
+                      </small>
+                    </div>
                   </div>
+                  
                   <div className="mb-3">
                     <input
+                      id="archivoInput"
                       type="file"
                       className="form-control"
                       accept=".pdf"
@@ -109,13 +134,15 @@ function Foro({ user, onLogout }) {
                     />
                     <small className="text-muted">PDF máximo 20MB</small>
                   </div>
+                  
                   {error && (
                     <div className="alert alert-danger">{error}</div>
                   )}
+                  
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={loading}
+                    disabled={loading || nuevoComentario.length > MAX_CARACTERES}
                   >
                     {loading ? 'Publicando...' : 'Publicar'}
                   </button>
