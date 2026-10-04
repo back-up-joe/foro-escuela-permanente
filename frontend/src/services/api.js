@@ -91,3 +91,20 @@ export const getCronograma = async () => {
   const response = await api.get('cronograma/');
   return response.data;
 };
+
+/////////////////////////////////////// ChatBot
+// Chat
+export const sendChatMessage = async (data) => {
+  const response = await api.post('chat/mensajes/send/', data);
+  return response.data;
+};
+
+export const getChatSessions = async () => {
+  const response = await api.get('chat/sesiones/');
+  return response.data;
+};
+
+export const createChatSession = async () => {
+  const response = await api.post('chat/sesiones/');
+  return response.data;
+};

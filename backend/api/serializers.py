@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,4 +121,18 @@ class CronogramaSerializer(serializers.ModelSerializer):
                   'dia', 'fecha', 'semana_calendario', 'semana_numero',
                   'inicio', 'termino', 'relator', 'trabajo', 'entrega']
         read_only_fields = ['id']
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChatMessage
+        fields = ['id', 'rol', 'contenido', 'creado']
+        read_only_fields = ['creado']
+
+class ChatSessionSerializer(serializers.ModelSerializer):
+    mensajes = ChatMessageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = ChatSession
+        fields = ['id', 'titulo', 'creado', 'actualizado', 'mensajes']
+        read_only_fields = ['creado', 'actualizado']
 
