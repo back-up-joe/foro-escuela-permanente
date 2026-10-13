@@ -497,3 +497,471 @@ footer {
     font-size: 0.9rem !important;
   }
 }
+
+/* ============================================
+   CRONOGRAMA - ESTADÍSTICAS
+   ============================================ */
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 4px solid #db1010;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.stat-card.stat-total { border-left-color: #db1010; }
+.stat-card.stat-presencial { border-left-color: #28a745; }
+.stat-card.stat-virtual { border-left-color: #17a2b8; }
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* ============================================
+   CALENDARIO COMPACTO
+   ============================================ */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  max-width: 100%;
+}
+
+.calendar-header-cell {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.65rem;   /* ← más pequeño */
+  color: #6c757d;
+  text-transform: uppercase;
+  padding: 4px 2px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 2px 3px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.15s ease;
+  min-height: 32px;   /* ← antes 60px */
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  border: none;
+}
+
+.calendar-cell.has-event {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+  border-color: #db1010;
+  cursor: pointer;
+}
+
+.calendar-cell.has-event:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(219, 16, 16, 0.25);
+  z-index: 10;
+}
+
+.calendar-day {
+  font-weight: 700;
+  font-size: 0.7rem;   /* ← antes 0.9rem */
+  color: #333;
+  line-height: 1;
+}
+
+.calendar-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.calendar-event-dot {
+  width: 5px;    /* ← antes 8px */
+  height: 5px;
+  border-radius: 50%;
+}
+
+.dot-presencial {
+  background-color: #db1010;   /* ← Rojo intenso */
+}
+
+.dot-virtual {
+  background-color: #0d47a1;   /* ← Azul profundo */
+}
+
+/* Badges de tipo */
+.badge.bg-success {
+  background-color: #db1010 !important;  /* Presencial = rojo */
+}
+
+.badge.bg-info {
+  background-color: #0d47a1 !important;  /* Virtual = azul */
+}
+
+.calendar-more {
+  font-size: 0.55rem;
+  color: #db1010;
+  font-weight: 700;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ============================================
+   TARJETAS DE SESIÓN
+   ============================================ */
+
+.sesion-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border-left: 4px solid #db1010;
+  height: 100%;
+}
+
+.sesion-card.card-presencial {
+  border-left-color: #db1010;
+}
+
+.sesion-card.card-virtual {
+  border-left-color: #0d47a1;
+}
+
+.sesion-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.sesion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sesion-card-fecha {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.sesion-card-body {
+  padding: 16px;
+}
+
+.sesion-modulo {
+  color: #db1010;
+  font-weight: 700;
+}
+
+.sesion-num {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.sesion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 8px;
+}
+
+/* ============================================
+   VISTA LINEAL (TIMELINE)
+   ============================================ */
+
+.modulo-group {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.modulo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #db1010;
+  color: #db1010;
+}
+
+.modulo-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.modulo-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #db1010 0%, #e9ecef 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #e9ecef;
+}
+
+/* Timeline dots */
+.timeline-dot.dot-presencial {
+  background-color: #db1010;
+  box-shadow: 0 0 0 2px #db1010;
+}
+
+.timeline-dot.dot-virtual {
+  background-color: #0d47a1;
+  box-shadow: 0 0 0 2px #0d47a1;
+}
+
+.timeline-content {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.timeline-content:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.timeline-sesion {
+  color: #db1010;
+  font-size: 1rem;
+}
+
+.timeline-details {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+/* ============================================
+   MODAL DE SESIÓN
+   ============================================ */
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: white;
+  border-radius: 12px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #db1010;
+  color: white;
+}
+
+.btn-close-custom {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-close-custom:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.modal-card-body {
+  padding: 16px;
+}
+
+.sesion-detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   RESPONSIVE - CALENDARIO
+   ============================================ */
+
+/* Escritorio grande: Calendario más ancho pero aún compacto */
+@media (min-width: 992px) {
+  .calendar-grid {
+    gap: 3px;
+  }
+
+  .calendar-cell {
+    min-height: 38px;
+    max-height: 46px;
+  }
+
+  .calendar-day {
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet: Ajustar proporciones */
+@media (max-width: 991.98px) and (min-width: 577px) {
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-cell {
+    min-height: 34px;
+    max-height: 42px;
+    padding: 2px;
+  }
+
+  .calendar-day {
+    font-size: 0.7rem;
+  }
+}
+
+/* Móvil: Compacto */
+@media (max-width: 576px) {
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-cell {
+    min-height: 30px;
+    max-height: 36px;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  .calendar-day {
+    font-size: 0.65rem;
+  }
+
+  .calendar-header-cell {
+    font-size: 0.55rem;
+    padding: 3px 1px;
+  }
+
+  .calendar-event-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .calendar-more {
+    font-size: 0.5rem;
+  }
+
+  .modal-card {
+    max-width: 95%;
+  }
+
+  .modal-card-header,
+  .modal-card-body {
+    padding: 12px;
+  }
+}
+
+/* Móvil muy pequeño */
+@media (max-width: 400px) {
+  .calendar-cell {
+    min-height: 26px;
+    max-height: 32px;
+    padding: 1px;
+  }
+
+  .calendar-day {
+    font-size: 0.6rem;
+  }
+
+  .calendar-header-cell {
+    font-size: 0.5rem;
+  }
+}

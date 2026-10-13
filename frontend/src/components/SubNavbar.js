@@ -9,13 +9,13 @@ function SubNavbar() {
           <li>
             <a href="https://linternadepapel.cl" target="_blank" rel="noopener noreferrer">
         
-              Linterna de Papel
+              Linterna de Papel.cl
             </a>
           </li>
           <li>
             <a href="https://resistenciainformativa.org" target="_blank" rel="noopener noreferrer">
               
-              Resistencia Informativa
+              Resistencia Informativa.org
             </a>
           </li>
         </ul>

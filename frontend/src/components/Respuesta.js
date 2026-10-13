@@ -32,7 +32,7 @@ function Respuesta({ respuesta, usuarioActual }) {
             {respuesta.usuario.username}
           </strong>
           
-          {/* ✅ CONTENIDO CON PLEGADO */}
+          {/* CONTENIDO CON PLEGADO */}
           <div className="respuesta-contenido">
             <div className={`comentario-texto ${!expandido && contenidoLargo ? 'plegado' : ''}`}>
               {contenidoMostrar}

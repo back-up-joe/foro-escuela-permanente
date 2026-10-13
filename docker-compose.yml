@@ -77,6 +77,7 @@ services:
       - backend
     environment:
       - REACT_APP_API_URL=${REACT_APP_API_URL}
+      - REACT_APP_BASE_URL=${REACT_APP_BASE_URL}
       - WDS_SOCKET_PORT=3000
     command: npm start
 

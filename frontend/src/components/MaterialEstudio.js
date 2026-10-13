@@ -12,7 +12,7 @@ function MaterialEstudio({ user, onLogout, nivelActual, setNivelActual }) {
   const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
 
   // Para desarrollo local
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+  const API_URL = process.env.REACT_APP_API_URL;
   // const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
   
   useEffect(() => {
@@ -85,7 +85,7 @@ function MaterialEstudio({ user, onLogout, nivelActual, setNivelActual }) {
     COMENTAR PARA LOCAL    
     */
 
-    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     if (archivoPath.startsWith('/media/')) {
         return `${baseUrl}${archivoPath}`;

@@ -19,12 +19,13 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
     ? comentario.contenido
     : comentario.contenido.substring(0, MAX_CARACTERES) + '...';
 
-  /* Entorno local */
-  const API_BASE_URL = 'http://127.0.0.1:8000';
-  
+  /* Entorno local 
+  const API_BASE_URL = 'http://127.0.0.1:8000'; */
   
   /* Producción
   const API_BASE_URL = 'https://escueladecuadros.sytes.net'; */
+
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const handleLike = () => {
     onLike(comentario.id);

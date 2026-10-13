@@ -16,7 +16,7 @@ function Informes({ user, onLogout, nivelActual, setNivelActual }) {
   const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
 
   // Obtener la URL base desde variables de entorno
-  const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+  // const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
   useEffect(() => {
     cargarInformes();
@@ -99,7 +99,7 @@ function Informes({ user, onLogout, nivelActual, setNivelActual }) {
     */
 
     // Usar la URL base desde variables de entorno
-    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
+    const baseUrl = process.env.REACT_APP_BASE_URL;
     
     // Si el path ya comienza con /media/, usarlo directamente
     if (archivoPath.startsWith('/media/')) {

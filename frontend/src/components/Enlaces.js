@@ -12,8 +12,10 @@ function Enlaces({ user, onLogout, nivelActual, setNivelActual }) {
   const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
 
   // Constante de URL (cambiar al pasar a producción)
-  const API_BASE_URL = 'http://localhost:8000/api/';
+  // const API_BASE_URL = 'http://localhost:8000/api/';
   // const API_BASE_URL = 'https://escueladecuadros.sytes.net/api/'; /* Descomentar para producción */
+
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     cargarEnlaces();
