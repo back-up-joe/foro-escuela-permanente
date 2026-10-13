@@ -1,11 +1,19 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario
+
+class PerfilUsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerfilUsuario
+        fields = ['tipo_acceso', 'niveles_permitidos', 'es_admin_niveles']
+        read_only_fields = ['niveles_permitidos', 'es_admin_niveles']
 
 class UserSerializer(serializers.ModelSerializer):
+    perfil = PerfilUsuarioSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'perfil']
 
 class RespuestaSerializer(serializers.ModelSerializer):
     usuario = UserSerializer(read_only=True)
@@ -14,7 +22,7 @@ class RespuestaSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Respuesta
-        fields = ['id', 'comentario', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
+        fields = ['id', 'comentario', 'nivel', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
                   'usuario', 'total_likes', 'usuario_ha_dado_like']
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion', 'usuario', 'likes', 'comentario']
         extra_kwargs = {
@@ -35,7 +43,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Comentario
-        fields = ['id', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
+        fields = ['id', 'nivel', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
                   'usuario', 'archivo', 'likes', 'total_likes', 
                   'usuario_ha_dado_like', 'respuestas']
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion', 'usuario', 'likes']
@@ -64,7 +72,7 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MaterialEstudio
-        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nombre_archivo', 
+        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nivel', 'nombre_archivo', 
                   'tamaño_archivo', 'fecha_subida', 'activo', 'orden']
         read_only_fields = ['fecha_subida', 'fecha_actualizacion']
     
@@ -89,7 +97,7 @@ class InformeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Informe
-        fields = ['id', 'usuario', 'titulo', 'descripcion', 'archivo', 
+        fields = ['id', 'usuario', 'titulo', 'descripcion', 'archivo', 'nivel',
                   'nombre_archivo', 'tamaño_archivo', 'fecha_subida']
         read_only_fields = ['fecha_subida', 'fecha_actualizacion']
     
@@ -107,11 +115,10 @@ class InformeSerializer(serializers.ModelSerializer):
                 return f"{size / (1024 * 1024):.2f} MB"
         return "0 B"
 
-
 class EnlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enlace
-        fields = ['id', 'titulo', 'descripcion', 'url', 'activo', 'orden', 'fecha_creacion']
+        fields = ['id', 'titulo', 'descripcion', 'url', 'nivel', 'activo', 'orden', 'fecha_creacion']
         read_only_fields = ['id', 'fecha_creacion']
 
 class CronogramaSerializer(serializers.ModelSerializer):

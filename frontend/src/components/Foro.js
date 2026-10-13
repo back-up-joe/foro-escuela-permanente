@@ -5,23 +5,22 @@ import Footer from './Footer';
 import Comentario from './Comentario';
 import Banner from './Banner';
 
-function Foro({ user, onLogout }) {
+function Foro({ user, onLogout, nivelActual, setNivelActual }) {
   const [comentarios, setComentarios] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState('');
   const [archivo, setArchivo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // NUEVO: Límite de caracteres
   const MAX_CARACTERES = 2000;
-  
+
   useEffect(() => {
     cargarComentarios();
-  }, []);
+  }, [nivelActual]);  // ← Recargar cuando cambia el nivel
 
   const cargarComentarios = async () => {
     try {
-      const data = await getComentarios();
+      const data = await getComentarios(nivelActual);
       setComentarios(data);
     } catch (err) {
       console.error('Error cargando comentarios:', err);
@@ -30,15 +29,14 @@ function Foro({ user, onLogout }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validar longitud
+    
     if (nuevoComentario.length > MAX_CARACTERES) {
       setError(`El comentario no puede superar los ${MAX_CARACTERES} caracteres`);
       return;
     }
-
+    
     if (!nuevoComentario.trim() && !archivo) {
-      setError('Debes escribir un comentario');
+      setError('Debes escribir un comentario o subir un archivo');
       return;
     }
 
@@ -49,13 +47,16 @@ function Foro({ user, onLogout }) {
       const data = {
         contenido: nuevoComentario,
         archivo: archivo,
+        nivel: nivelActual,  // ENVIAR NIVEL ACTUAL
       };
       await createComentario(data);
       setNuevoComentario('');
       setArchivo(null);
+      const fileInput = document.getElementById('archivoInput');
+      if (fileInput) fileInput.value = '';
       await cargarComentarios();
     } catch (err) {
-      setError('Debes escribir comentario o el archivo adjunto es demasiado grande (máx 20MB)');
+      setError('Error al crear el comentario');
       console.error(err);
     } finally {
       setLoading(false);
@@ -71,9 +72,9 @@ function Foro({ user, onLogout }) {
     }
   };
 
-  const handleResponder = async (id, contenido) => {
+  const handleResponder = async (id, contenido, nivel) => {
     try {
-      await responderComentario(id, contenido);
+      await responderComentario(id, contenido, nivel);
       await cargarComentarios();
     } catch (err) {
       console.error('Error al responder:', err);
@@ -82,18 +83,21 @@ function Foro({ user, onLogout }) {
 
   return (
     <>
-      <Navbar user={user} onLogout={onLogout} />
-
-      {/* BANNER DE ANCHO COMPLETO */}
+      <Navbar 
+        user={user} 
+        onLogout={onLogout} 
+        nivelActual={nivelActual}
+        setNivelActual={setNivelActual}
+      />
       <Banner />
-
       <div className="container foro-container">
         <div className="row">
           <div className="col-md-8 mx-auto">
-            <div className="mb-4">              
+            <div className="mb-4">
               <h2>
                 <i className="bi bi-chat-dots me-2"></i>
-                Foro</h2>
+                Foro {nivelActual && `- Nivel ${nivelActual}`}
+              </h2>
               <p className="text-muted">Compartir comentarios y documentos</p>
             </div>
 
@@ -108,7 +112,6 @@ function Foro({ user, onLogout }) {
                       placeholder="Escribir comentario..."
                       value={nuevoComentario}
                       onChange={(e) => {
-                        // Limitar entrada a MAX_CARACTERES
                         if (e.target.value.length <= MAX_CARACTERES) {
                           setNuevoComentario(e.target.value);
                           if (error) setError('');
@@ -116,14 +119,12 @@ function Foro({ user, onLogout }) {
                       }}
                       maxLength={MAX_CARACTERES}
                     />
-                    {/* NUEVO: Contador de caracteres */}
                     <div className="d-flex justify-content-end mt-1">
                       <small className={nuevoComentario.length > MAX_CARACTERES * 0.9 ? 'text-danger' : 'text-muted'}>
                         {nuevoComentario.length} / {MAX_CARACTERES}
                       </small>
                     </div>
                   </div>
-                  
                   <div className="mb-3">
                     <input
                       id="archivoInput"
@@ -134,11 +135,9 @@ function Foro({ user, onLogout }) {
                     />
                     <small className="text-muted">PDF máximo 20MB</small>
                   </div>
-                  
                   {error && (
                     <div className="alert alert-danger">{error}</div>
                   )}
-                  
                   <button
                     type="submit"
                     className="btn btn-primary"
@@ -153,7 +152,7 @@ function Foro({ user, onLogout }) {
             {/* Lista de comentarios */}
             {comentarios.length === 0 ? (
               <div className="text-center text-muted py-5">
-                <p>No hay comentarios aún.</p>
+                <p>No hay comentarios en este nivel aún.</p>
               </div>
             ) : (
               comentarios.map((comentario) => (

@@ -22,20 +22,22 @@ export const login = async (username, password) => {
   return response.data;
 };
 
-export const getComentarios = async () => {
-  const response = await api.get('comentarios/');
+// Actualizar getComentarios para aceptar nivel
+export const getComentarios = async (nivel = null) => {
+  const url = nivel ? `comentarios/?nivel=${nivel}` : 'comentarios/';
+  const response = await api.get(url);
   return response.data;
 };
 
+// Actualizar createComentario para aceptar nivel
 export const createComentario = async (data) => {
-
-  console.log('Datos recibidos:', data);
-  console.log('Archivo:', data.archivo);
-
   const formData = new FormData();
   formData.append('contenido', data.contenido);
   if (data.archivo) {
     formData.append('archivo', data.archivo);
+  }
+  if (data.nivel) {
+    formData.append('nivel', data.nivel);
   }
   const response = await api.post('comentarios/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
@@ -48,8 +50,11 @@ export const likeComentario = async (id) => {
   return response.data;
 };
 
-export const responderComentario = async (id, contenido) => {
-  const response = await api.post(`comentarios/${id}/responder/`, { contenido });
+// Actualizar responderComentario para aceptar nivel
+export const responderComentario = async (id, contenido, nivel = null) => {
+  const data = { contenido };
+  if (nivel) data.nivel = nivel;
+  const response = await api.post(`comentarios/${id}/responder/`, data);
   return response.data;
 };
 
@@ -61,8 +66,9 @@ export const likeRespuesta = async (id) => {
 export default api;
 
 //////////////////////////////////// Informes
-export const getInformes = async () => {
-  const response = await api.get('informes/');
+export const getInformes = async (nivel = null) => {
+  const url = nivel ? `informes/?nivel=${nivel}` : 'informes/';
+  const response = await api.get(url);
   return response.data;
 };
 
@@ -71,6 +77,10 @@ export const createInforme = async (data) => {
   formData.append('titulo', data.titulo);
   formData.append('descripcion', data.descripcion || '');
   formData.append('archivo', data.archivo);
+
+  if (data.nivel) {
+    formData.append('nivel', data.nivel);
+  }
   
   const response = await api.post('informes/', formData, {
     headers: {

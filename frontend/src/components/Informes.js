@@ -4,7 +4,7 @@ import Footer from './Footer';
 import Banner from './Banner';
 import { createInforme, getInformes } from '../services/api';
 
-function Informes({ user, onLogout }) {
+function Informes({ user, onLogout, nivelActual, setNivelActual }) {
   const [informes, setInformes] = useState([]);
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -12,16 +12,19 @@ function Informes({ user, onLogout }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Detectar si el usuario puede cambiar de nivel
+  const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
+
   // Obtener la URL base desde variables de entorno
   const baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
   useEffect(() => {
     cargarInformes();
-  }, []);
+  }, [nivelActual]);
 
   const cargarInformes = async () => {
     try {
-      const data = await getInformes();
+      const data = await getInformes(nivelActual);
       setInformes(data);
     } catch (err) {
       console.error('Error cargando informes:', err);
@@ -55,6 +58,7 @@ function Informes({ user, onLogout }) {
         titulo: titulo,
         descripcion: descripcion,
         archivo: archivo,
+        nivel: nivelActual, // Enviar el nivel actual
       };
       await createInforme(data);
       setTitulo('');
@@ -123,7 +127,12 @@ function Informes({ user, onLogout }) {
 
   return (
     <>
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar
+        user={user}
+        onLogout={onLogout}
+        nivelActual={nivelActual}
+        setNivelActual={setNivelActual}
+      />
       <Banner />
       <div className="container foro-container">
         <div className="row">
@@ -131,7 +140,7 @@ function Informes({ user, onLogout }) {
             <div className="mb-4">
               <h2>
                 <i className="bi bi-file-earmark-pdf me-2"></i>
-                Entrega de Informes
+                Entrega de Informes - Nivel {nivelActual}
               </h2>
               <p className="text-muted"></p>
             </div>
@@ -201,6 +210,14 @@ function Informes({ user, onLogout }) {
                           </div>
                           <div className="flex-grow-1">
                             <h6 className="card-title mb-1">{informe.titulo}</h6>
+                            
+                            {/* Mostrar nivel solo para usuarios tipo3 */}
+                            {puedeCambiarNivel && (
+                              <span className="badge bg-secondary mb-2">
+                                Nivel {informe.nivel}
+                              </span>
+                            )}
+
                             <p className="card-text text-muted small">
                               {informe.descripcion || 'Sin descripción'}
                             </p>

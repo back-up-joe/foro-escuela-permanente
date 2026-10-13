@@ -3,38 +3,44 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import Banner from './Banner';
 
-function Cronograma({ user, onLogout }) {
+function Cronograma({ user, onLogout, nivelActual, setNivelActual }) {
   const [cronograma, setCronograma] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Detectar si el usuario puede cambiar de nivel
+  const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
+
+  // URL base (cambiar al pasar a producción)
+  const API_BASE_URL = 'http://localhost:8000/api/';
+  // const API_BASE_URL = 'https://escueladecuadros.sytes.net/api/';
+
+  // Recargar cuando cambia el nivel
   useEffect(() => {
     cargarCronograma();
-  }, []);
+  }, [nivelActual]);
 
   const cargarCronograma = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      /*
-      const response = await fetch('https://escueladecuadros.sytes.net/api/cronograma/', {
+
+      // Construir URL según el nivel
+      const url = puedeCambiarNivel && nivelActual
+        ? `${API_BASE_URL}cronograma/?nivel=${nivelActual}`
+        : `${API_BASE_URL}cronograma/`;
+
+      console.log('🔗 Cargando cronograma desde:', url);
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-        
-      COMENTAR PARA ENTORNO LOCAL
-        
-        */
-      
-      const response = await fetch('http://localhost:8000/api/cronograma/', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      
       });
-      
+
       if (response.ok) {
         const data = await response.json();
+        console.log('Cronograma cargado:', data.length);
         setCronograma(data);
       } else {
         setError('Error al cargar el cronograma');
@@ -49,7 +55,12 @@ function Cronograma({ user, onLogout }) {
 
   return (
     <>
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar
+        user={user}
+        onLogout={onLogout}
+        nivelActual={nivelActual}
+        setNivelActual={setNivelActual}
+      />
       <Banner />
       <div className="container foro-container">
         <div className="row">
@@ -57,7 +68,7 @@ function Cronograma({ user, onLogout }) {
             <div className="mb-4">
               <h2>
                 <i className="bi bi-calendar me-2"></i>
-                Cronograma
+                Cronograma - Nivel {nivelActual}
               </h2>
               <p className="text-muted">Calendario de sesiones y actividades</p>
             </div>
@@ -102,11 +113,7 @@ function Cronograma({ user, onLogout }) {
                             {item.tipo}
                           </span>
                         </td>
-                        {/** 
-                        <td>{new Date(item.fecha).toLocaleDateString('es-CL')}</td>*/}
-
                         <td>{item.fecha.split('-').reverse().join('/')}</td>
-
                         <td>
                           {item.inicio && item.termino ? 
                             `${item.inicio.substring(0,5)} - ${item.termino.substring(0,5)}` : 

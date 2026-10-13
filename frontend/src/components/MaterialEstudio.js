@@ -3,18 +3,21 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import Banner from './Banner';
 
-function MaterialEstudio({ user, onLogout }) {
+function MaterialEstudio({ user, onLogout, nivelActual, setNivelActual }) {
   const [materiales, setMateriales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Detectar si el usuario puede cambiar de nivel
+  const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
+
   // Para desarrollo local
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
-  const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
+  // const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:8000';
   
   useEffect(() => {
     cargarMateriales();
-  }, []);
+  }, [nivelActual]);
 
   const cargarMateriales = async () => {
     setLoading(true);
@@ -31,7 +34,12 @@ function MaterialEstudio({ user, onLogout }) {
       
       */
 
-      const response = await fetch(`${API_URL}material-estudio/`, {
+      // Construir URL según el nivel
+      const url = puedeCambiarNivel && nivelActual
+        ? `${API_URL}material-estudio/?nivel=${nivelActual}`
+        : `${API_URL}material-estudio/`;
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -118,7 +126,12 @@ function MaterialEstudio({ user, onLogout }) {
 
   return (
     <>
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar
+        user={user}
+        onLogout={onLogout}
+        nivelActual={nivelActual}
+        setNivelActual={setNivelActual}
+      />
 
       {/* BANNER DE ANCHO COMPLETO */}
       <Banner />
@@ -129,7 +142,7 @@ function MaterialEstudio({ user, onLogout }) {
             <div className="mb-4">
               <h2>
                 <i className="bi bi-book me-2"></i>
-                Material de Estudio
+                Material de Estudio - Nivel {nivelActual}
               </h2>
               <p className="text-muted">
                 
@@ -165,6 +178,14 @@ function MaterialEstudio({ user, onLogout }) {
                           </div>
                           <div className="flex-grow-1">
                             <h5 className="card-title mb-1">{material.titulo}</h5>
+
+                            {/* Mostrar nivel solo para tipo3 */}
+                            {puedeCambiarNivel && (
+                              <span className="badge bg-secondary mb-2">
+                                Nivel {material.nivel}
+                              </span>
+                            )}
+
                             {material.descripcion && (
                               <p className="card-text text-muted small">
                                 {material.descripcion}
