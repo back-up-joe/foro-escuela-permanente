@@ -242,3 +242,33 @@ class ChatMessage(models.Model):
     
     def __str__(self):
         return f"{self.rol} - {self.creado.strftime('%d/%m/%Y %H:%M')}"
+
+class Retroalimentacion(models.Model):
+    informe = models.ForeignKey(
+        Informe, 
+        on_delete=models.CASCADE, 
+        related_name='retroalimentaciones'
+    )
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    comentario = models.TextField()
+    archivo = models.FileField(
+        upload_to='retroalimentaciones/', 
+        null=True, 
+        blank=True,
+        validators=[validate_pdf]
+    )
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+        verbose_name = 'Retroalimentación'
+        verbose_name_plural = 'Retroalimentaciones'
+    
+    def __str__(self):
+        return f"Retroalimentación de {self.usuario.username} al informe #{self.informe.id}"
+    
+    def nombre_archivo(self):
+        if self.archivo:
+            return self.archivo.name.split('/')[-1]
+        return None

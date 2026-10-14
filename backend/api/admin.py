@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Comentario, MaterialEstudio, Respuesta, Informe, Enlace, Cronograma, ChatSession, ChatMessage, PerfilUsuario
+from .models import Comentario, MaterialEstudio, Respuesta, Informe, Enlace, Cronograma, ChatSession, ChatMessage, PerfilUsuario, Retroalimentacion
 
 @admin.register(Comentario)
 class ComentarioAdmin(admin.ModelAdmin):
@@ -224,3 +224,33 @@ class PerfilUsuarioAdmin(admin.ModelAdmin):
             'fields': ('tipo_acceso',)
         }),
     )
+
+@admin.register(Retroalimentacion)
+class RetroalimentacionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'informe', 'usuario', 'comentario_corto', 'tiene_archivo', 'fecha_creacion')
+    list_filter = ('fecha_creacion', 'usuario')
+    search_fields = ('comentario', 'usuario__username', 'informe__titulo')
+    ordering = ('-fecha_creacion',)
+    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+    
+    fieldsets = (
+        ('Información', {
+            'fields': ('informe', 'usuario', 'comentario', 'archivo')
+        }),
+        ('Fechas', {
+            'fields': ('fecha_creacion', 'fecha_actualizacion'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def comentario_corto(self, obj):
+        if len(obj.comentario) > 60:
+            return obj.comentario[:60] + '...'
+        return obj.comentario
+    comentario_corto.short_description = 'Comentario'
+    
+    def tiene_archivo(self, obj):
+        return bool(obj.archivo)
+    tiene_archivo.boolean = True
+    tiene_archivo.short_description = 'PDF'
+

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario, Retroalimentacion
 
 class PerfilUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -142,4 +142,34 @@ class ChatSessionSerializer(serializers.ModelSerializer):
         model = ChatSession
         fields = ['id', 'titulo', 'creado', 'actualizado', 'mensajes']
         read_only_fields = ['creado', 'actualizado']
+
+class RetroalimentacionSerializer(serializers.ModelSerializer):
+    usuario = UserSerializer(read_only=True)
+    nombre_archivo = serializers.SerializerMethodField()
+    tamaño_archivo = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Retroalimentacion
+        fields = [
+            'id', 'informe', 'usuario', 'comentario', 'archivo',
+            'nombre_archivo', 'tamaño_archivo', 
+            'fecha_creacion', 'fecha_actualizacion'
+        ]
+        read_only_fields = ['id', 'usuario', 'fecha_creacion', 'fecha_actualizacion']
+    
+    def get_nombre_archivo(self, obj):
+        if obj.archivo:
+            return obj.archivo.name.split('/')[-1]
+        return None
+    
+    def get_tamaño_archivo(self, obj):
+        if obj.archivo:
+            size = obj.archivo.size
+            if size < 1024:
+                return f"{size} B"
+            elif size < 1024 * 1024:
+                return f"{size / 1024:.2f} KB"
+            else:
+                return f"{size / (1024 * 1024):.2f} MB"
+        return None
 

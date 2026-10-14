@@ -4,10 +4,12 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario
-from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer, ChatMessageSerializer, ChatSessionSerializer
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario, Retroalimentacion
+from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer, ChatMessageSerializer, ChatSessionSerializer, RetroalimentacionSerializer, PerfilUsuarioSerializer
 from .services.chatbot import ChatbotService
 from rest_framework.exceptions import PermissionDenied
 
@@ -509,3 +511,37 @@ class ChatMessageViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'No se pudo obtener respuesta del chatbot'}, status=500)
         '''
+
+class RetroalimentacionViewSet(viewsets.ModelViewSet):
+    serializer_class = RetroalimentacionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def get_queryset(self):
+        user = self.request.user
+        perfil = user.perfil
+        informe_id = self.request.query_params.get('informe')
+        
+        # Filtrar por informe si se proporciona
+        if informe_id:
+            return Retroalimentacion.objects.filter(informe_id=informe_id)
+        
+        return Retroalimentacion.objects.all()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({'request': self.request})
+        return context
+    
+    def create(self, request, *args, **kwargs):
+        # Solo tipo3 puede crear retroalimentaciones
+        if request.user.perfil.tipo_acceso != 'tipo3':
+            return Response(
+                {'error': 'Solo los usuarios con acceso completo pueden crear retroalimentaciones'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        return super().create(request, *args, **kwargs)
+    
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
