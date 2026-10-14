@@ -965,3 +965,57 @@ footer {
     font-size: 0.5rem;
   }
 }
+
+/* ============================================
+   BANNER CON CARRUSEL - SIN ESPACIO SUPERIOR
+   ============================================ */
+
+.banner-foro {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #db1010;
+  margin-top: 0;        /* ← SIN margen superior */
+  overflow: hidden;
+  line-height: 0;
+  display: block;
+}
+
+.banner-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: block;
+  line-height: 0;
+}
+
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  display: block;
+}
+
+.banner-slide.active {
+  opacity: 1;
+  position: relative;   /* ← Define la altura según la imagen */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-slide {
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-slide {
+    max-height: 100px;
+  }
+}
