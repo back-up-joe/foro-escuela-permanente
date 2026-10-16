@@ -1,6 +1,18 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ComentarioViewSet, RespuestaViewSet, LoginView, MaterialEstudioViewSet, InformeViewSet, EnlaceViewSet, CronogramaViewSet, ChatSessionViewSet, ChatMessageViewSet, RetroalimentacionViewSet
+from .views import (
+    ComentarioViewSet,
+    RespuestaViewSet,
+    LoginView,
+    MaterialEstudioViewSet,
+    InformeViewSet,
+    EnlaceViewSet,
+    CronogramaViewSet,
+    ChatSessionViewSet,
+    ChatMessageViewSet,
+    RetroalimentacionViewSet,
+    CambiarPasswordView,
+)
 
 router = DefaultRouter()
 router.register(r'comentarios', ComentarioViewSet, basename='comentario')
@@ -14,5 +26,6 @@ router.register(r'chat/mensajes', ChatMessageViewSet, basename='chat-mensaje')
 router.register(r'retroalimentaciones', RetroalimentacionViewSet, basename='retroalimentacion')
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
+    path('cambiar-password/', CambiarPasswordView.as_view(), name='cambiar-password'),
     path('', include(router.urls)),
 ]

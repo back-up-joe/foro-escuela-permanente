@@ -1,40 +1,48 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+/*import React from "react";*/
+
+import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import CambiarPasswordModal from './CambiarPasswordModal';
 
 function Navbar({ user, onLogout, nivelActual, setNivelActual }) {
   const navigate = useNavigate();
+  const [mostrarCambiarPassword, setMostrarCambiarPassword] = useState(false);
 
   // Detectar si el usuario puede cambiar de nivel
-  const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
+  const puedeCambiarNivel = user?.perfil?.tipo_acceso === "tipo3";
 
   // Nivel del usuario (para tipo1 y tipo2)
   const nivelUsuario = user?.perfil?.niveles_permitidos?.[0] || 1;
 
+  // URL base
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   const handleLogout = () => {
     onLogout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
+    <>
     <nav className="navbar navbar-expand-lg fixed-top">
       <div className="container">
         <Link className="navbar-brand" to="/foro">
-          <img 
-            src="/images/logo-partido.png" 
-            alt="Logo" 
-            height="40" 
+          <img
+            src="/images/logo-partido.png"
+            alt="Logo"
+            height="40"
             className="d-inline-block align-top me-2"
-          />          
+          />
         </Link>
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
           aria-controls="navbarNav"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          style={{ marginLeft: '20%' }}  // <-- DESPLAZAR HAMBURGUESA 20% AL CENTRO
+          style={{ marginLeft: "20%" }} // <-- DESPLAZAR HAMBURGUESA 20% AL CENTRO
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -83,13 +91,13 @@ function Navbar({ user, onLogout, nivelActual, setNivelActual }) {
                 id="userDropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                style={{ color: 'white', textDecoration: 'none' }}
+                style={{ color: "white", textDecoration: "none" }}
               >
                 <i className="bi bi-person-circle me-1"></i>
-                {user?.username || 'Usuario'}
+                {user?.username || "Usuario"}
               </button>
-              <ul 
-                className="dropdown-menu dropdown-menu-end user-dropdown" 
+              <ul
+                className="dropdown-menu dropdown-menu-end user-dropdown"
                 aria-labelledby="userDropdown"
               >
                 {/* Selector de nivel (solo para tipo3) */}
@@ -103,25 +111,31 @@ function Navbar({ user, onLogout, nivelActual, setNivelActual }) {
                     </li>
                     <li>
                       <button
-                        className={`dropdown-item ${nivelActual === 1 ? 'active' : ''}`}
+                        className={`dropdown-item ${nivelActual === 1 ? "active" : ""}`}
                         onClick={() => setNivelActual(1)}
                       >
                         <i className="bi bi-1-circle me-1"></i>
                         Nivel 1
-                        {nivelActual === 1 && <i className="bi bi-check-lg ms-2"></i>}
+                        {nivelActual === 1 && (
+                          <i className="bi bi-check-lg ms-2"></i>
+                        )}
                       </button>
                     </li>
                     <li>
                       <button
-                        className={`dropdown-item ${nivelActual === 2 ? 'active' : ''}`}
+                        className={`dropdown-item ${nivelActual === 2 ? "active" : ""}`}
                         onClick={() => setNivelActual(2)}
                       >
                         <i className="bi bi-2-circle me-1"></i>
                         Nivel 2
-                        {nivelActual === 2 && <i className="bi bi-check-lg ms-2"></i>}
+                        {nivelActual === 2 && (
+                          <i className="bi bi-check-lg ms-2"></i>
+                        )}
                       </button>
                     </li>
-                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
                   </>
                 )}
 
@@ -134,27 +148,58 @@ function Navbar({ user, onLogout, nivelActual, setNivelActual }) {
                         Nivel {nivelUsuario}
                       </span>
                     </li>
-                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
                   </>
                 )}
 
+                {/* Cambiar contraseña */}
+                <li>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setMostrarCambiarPassword(true);
+                      // Cerrar el dropdown
+                      const dropdown = document.getElementById("userDropdown");
+                      if (dropdown) dropdown.click();
+                    }}
+                  >
+                    <i className="bi bi-key me-1"></i>
+                    Cambiar Contraseña
+                  </button>
+                </li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
+
                 {/* Cerrar sesión */}
                 <li>
-                  <button 
-                    className="dropdown-item text-danger" 
+                  <button
+                    className="dropdown-item text-danger"
                     onClick={handleLogout}
                   >
                     <i className="bi bi-box-arrow-right me-1"></i>
                     Cerrar Sesión
                   </button>
                 </li>
+
               </ul>
             </li>
-
           </ul>
         </div>
       </div>
+
     </nav>
+
+    {/* MODAL DE CAMBIAR CONTRASEÑA */}
+    {mostrarCambiarPassword && (
+      <CambiarPasswordModal
+        onClose={() => setMostrarCambiarPassword(false)}
+        API_BASE_URL={API_BASE_URL}
+      />
+    )}
+  </>
   );
 }
 

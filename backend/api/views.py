@@ -6,7 +6,10 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, update_session_auth_hash
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
+
 from django.contrib.auth.models import User
 from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario, Retroalimentacion
 from .serializers import ComentarioSerializer, RespuestaSerializer, LoginSerializer, MaterialEstudioSerializer, InformeSerializer, EnlaceSerializer, CronogramaSerializer, ChatMessageSerializer, ChatSessionSerializer, RetroalimentacionSerializer, PerfilUsuarioSerializer
@@ -51,6 +54,90 @@ class LoginView(generics.GenericAPIView):
             {'error': 'Credenciales inválidas'},
             status=status.HTTP_401_UNAUTHORIZED
         )
+
+class CambiarPasswordView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        user = request.user
+        password_actual = request.data.get('password_actual')
+        password_nueva = request.data.get('password_nueva')
+        password_confirmacion = request.data.get('password_confirmacion')
+        
+        # 1. Campos requeridos
+        if not password_actual or not password_nueva or not password_confirmacion:
+            return Response(
+                {'error': 'Todos los campos son requeridos'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 2. Contraseña actual correcta
+        if not user.check_password(password_actual):
+            return Response(
+                {'error': 'La contraseña actual es incorrecta'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 3. La nueva no puede ser igual a la actual
+        if password_actual == password_nueva:
+            return Response(
+                {'error': 'La nueva contraseña no puede ser igual a la actual'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 4. Confirmación debe coincidir
+        if password_nueva != password_confirmacion:
+            return Response(
+                {'error': 'Las contraseñas nuevas no coinciden'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 5. Longitud mínima
+        if len(password_nueva) < 8:
+            return Response(
+                {'error': 'La nueva contraseña debe tener al menos 8 caracteres'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 6. Debe contener al menos una letra
+        import re
+        if not re.search(r'[a-zA-Z]', password_nueva):
+            return Response(
+                {'error': 'La nueva contraseña debe contener al menos una letra'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 7. Debe contener al menos un número
+        if not re.search(r'\d', password_nueva):
+            return Response(
+                {'error': 'La nueva contraseña debe contener al menos un número'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 8. Debe contener al menos un carácter especial
+        if not re.search(r'[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?~`]', password_nueva):
+            return Response(
+                {'error': 'La nueva contraseña debe contener al menos un carácter especial (!@#$%^&*...)'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # 9. Validación adicional de Django (contraseñas comunes, etc.)
+        try:
+            validate_password(password_nueva, user)
+        except DjangoValidationError as e:
+            return Response(
+                {'error': ' '.join(e.messages)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Cambiar contraseña
+        user.set_password(password_nueva)
+        user.save()
+        
+        return Response({
+            'success': True,
+            'message': 'Contraseña cambiada exitosamente'
+        })
 
 '''
 class ComentarioViewSet(viewsets.ModelViewSet):
@@ -545,3 +632,4 @@ class RetroalimentacionViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(usuario=self.request.user)
+

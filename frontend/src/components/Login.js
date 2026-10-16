@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
+import SolicitarPasswordModal from './SolicitarPasswordModal';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mostrarSolicitar, setMostrarSolicitar] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,8 +70,29 @@ function Login({ onLogin }) {
             {loading ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
+
+        {/* ✅ Enlace de olvido de contraseña */}
+        <div className="mt-3">
+          <button
+            type="button"
+            className="btn btn-link p-0 text-muted small"
+            onClick={() => setMostrarSolicitar(true)}
+            style={{ textDecoration: 'underline' }}
+          >
+            <i className="bi bi-key me-1"></i>
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+
       </div>
-    </div>
+
+      {/* ✅ Modal de solicitar contraseña */}
+      {mostrarSolicitar && (
+        <SolicitarPasswordModal onClose={() => setMostrarSolicitar(false)} />
+      )}
+    
+    </div>  
+
   );
 }
 
