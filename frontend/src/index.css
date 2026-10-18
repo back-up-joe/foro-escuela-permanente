@@ -1207,3 +1207,50 @@ footer {
 .login-card .btn-link:hover {
   color: #db1010 !important;
 }
+
+/* ============================================
+   INPUT DE CONTRASEÑA CON OJO
+   ============================================ */
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .password-input {
+  padding-right: 45px;  /* Espacio para el ícono */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.1rem;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.password-toggle:hover {
+  color: #db1010;
+  background-color: rgba(219, 16, 16, 0.08);
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: #db1010;
+}
+
+.password-toggle i {
+  pointer-events: none;  /* El ícono no interfiere con el clic */
+}
