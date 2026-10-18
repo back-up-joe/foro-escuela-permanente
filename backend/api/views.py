@@ -1,4 +1,5 @@
 from urllib import request
+from .utils_notificaciones import enviar_notificacion_usuario
 
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
@@ -133,6 +134,19 @@ class CambiarPasswordView(generics.GenericAPIView):
         # Cambiar contraseña
         user.set_password(password_nueva)
         user.save()
+
+        # Enviar notificación solo a este usuario
+        asunto = "Tu contraseña del foro ha sido cambiada"
+        texto = f"Hola {user.username}, tu contraseña en el foro ha sido cambiada exitosamente."
+        html = f"""
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+            <h2 style="color: #db1010;">🔐 Tu contraseña ha sido cambiada</h2>
+            <p>Hola <strong>{user.username}</strong>,</p>
+            <p>Te informamos que tu contraseña en el foro ha sido cambiada exitosamente.</p>
+            <p>Si no fuiste tú, contacta al administrador.</p>
+        </div>
+        """
+        enviar_notificacion_usuario(asunto, texto, html, user)
         
         return Response({
             'success': True,
