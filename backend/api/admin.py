@@ -59,13 +59,22 @@ class RespuestaAdmin(admin.ModelAdmin):
         return obj.contenido
     contenido_corto.short_description = 'Contenido'
 
+'''
 @admin.register(MaterialEstudio)
 class MaterialEstudioAdmin(admin.ModelAdmin):
     list_display = ('id', 'titulo', 'nivel', 'fecha_subida', 'activo', 'orden')
     list_filter = ('nivel', 'activo', 'fecha_subida')
     search_fields = ('titulo', 'descripcion')
     ordering = ('nivel', 'orden', '-fecha_subida')
-    fields = ('titulo', 'descripcion', 'archivo', 'nivel', 'activo', 'orden')
+    fields = ('titulo', 'descripcion', 'archivo', 'nivel', 'activo', 'orden')'''
+
+@admin.register(MaterialEstudio)
+class MaterialEstudioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'titulo', 'nivel', 'modulo', 'sesion', 'fecha_subida', 'activo', 'orden')
+    list_filter = ('nivel', 'modulo', 'sesion', 'activo', 'fecha_subida')
+    search_fields = ('titulo', 'descripcion', 'modulo', 'sesion')
+    ordering = ('nivel', 'modulo', 'sesion', 'orden', '-fecha_subida')
+    fields = ('titulo', 'descripcion', 'archivo', 'nivel', 'modulo', 'sesion', 'activo', 'orden')
 
 @admin.register(Informe)
 class InformeAdmin(admin.ModelAdmin):

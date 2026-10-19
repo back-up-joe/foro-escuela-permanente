@@ -72,7 +72,8 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MaterialEstudio
-        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nivel', 'nombre_archivo', 
+        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nivel',
+                  'modulo', 'sesion', 'nombre_archivo', 
                   'tamaño_archivo', 'fecha_subida', 'activo', 'orden']
         read_only_fields = ['fecha_subida', 'fecha_actualizacion']
     
@@ -89,6 +90,9 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
             else:
                 return f"{size / (1024 * 1024):.2f} MB"
         return "0 B"
+
+    def get_creador_username(self, obj):
+        return None
 
 class InformeSerializer(serializers.ModelSerializer):
     usuario = UserSerializer(read_only=True)

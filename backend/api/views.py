@@ -383,14 +383,19 @@ class RespuestaViewSet(viewsets.ModelViewSet):
             'total_likes': respuesta.total_likes()
         })
     
+'''
 class MaterialEstudioViewSet(viewsets.ModelViewSet):
     serializer_class = MaterialEstudioSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     def get_queryset(self):
         user = self.request.user
         perfil = user.perfil
         nivel = self.request.query_params.get('nivel')
+
+        modulo = self.request.query_params.get('modulo')   # NUEVO
+        sesion = self.request.query_params.get('sesion')   # NUEVO
         
         # Tipo3 puede elegir el nivel desde el selector
         if perfil.tipo_acceso == 'tipo3':
@@ -408,7 +413,88 @@ class MaterialEstudioViewSet(viewsets.ModelViewSet):
             return MaterialEstudio.objects.filter(
                 nivel__in=perfil.niveles_permitidos, 
                 activo=True
-            ).order_by('orden', '-fecha_subida')
+            ).order_by('orden', '-fecha_subida')'''
+
+class MaterialEstudioViewSet(viewsets.ModelViewSet):
+    serializer_class = MaterialEstudioSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]  # necesario para subir archivos
+    
+    def get_queryset(self):
+        user = self.request.user
+        perfil = user.perfil
+        nivel = self.request.query_params.get('nivel')
+        modulo = self.request.query_params.get('modulo')   # NUEVO
+        sesion = self.request.query_params.get('sesion')   # NUEVO
+        
+        # Base queryset según nivel
+        if perfil.tipo_acceso == 'tipo3':
+            if nivel:
+                qs = MaterialEstudio.objects.filter(nivel=nivel, activo=True)
+            else:
+                qs = MaterialEstudio.objects.filter(activo=True)
+        else:
+            qs = MaterialEstudio.objects.filter(
+                nivel__in=perfil.niveles_permitidos, 
+                activo=True
+            )
+        
+        # Filtros adicionales por módulo y sesión
+        if modulo:
+            qs = qs.filter(modulo=modulo)
+        if sesion:
+            qs = qs.filter(sesion=sesion)
+        
+        return qs.order_by('modulo', 'sesion', 'orden', '-fecha_subida')
+    
+    def create(self, request, *args, **kwargs):
+        # Solo tipo3 puede crear materiales
+        if request.user.perfil.tipo_acceso != 'tipo3':
+            return Response(
+                {'error': 'Solo los usuarios con acceso completo pueden subir materiales'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().create(request, *args, **kwargs)
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        perfil = user.perfil
+        
+        nivel_solicitado = self.request.data.get('nivel')
+        
+        if perfil.tipo_acceso == 'tipo3':
+            nivel = int(nivel_solicitado) if nivel_solicitado else 1
+            if nivel not in [1, 2]:
+                nivel = 1
+        else:
+            nivel = perfil.niveles_permitidos[0]
+        
+        serializer.save(nivel=nivel, activo=True)
+    
+    # NUEVO: endpoint para obtener módulos y sesiones disponibles (para filtros del frontend)
+    @action(detail=False, methods=['get'])
+    def filtros(self, request):
+        user = request.user
+        perfil = user.perfil
+        nivel = request.query_params.get('nivel')
+        
+        if perfil.tipo_acceso == 'tipo3':
+            if nivel:
+                qs = MaterialEstudio.objects.filter(nivel=nivel, activo=True)
+            else:
+                qs = MaterialEstudio.objects.filter(activo=True)
+        else:
+            qs = MaterialEstudio.objects.filter(
+                nivel__in=perfil.niveles_permitidos, 
+                activo=True
+            )
+        
+        modulos = list(qs.exclude(modulo__isnull=True).exclude(modulo='')
+                       .values_list('modulo', flat=True).distinct().order_by('modulo'))
+        sesiones = list(qs.exclude(sesion__isnull=True).exclude(sesion='')
+                        .values_list('sesion', flat=True).distinct().order_by('sesion'))
+        
+        return Response({'modulos': modulos, 'sesiones': sesiones})
 
 class InformeViewSet(viewsets.ModelViewSet):
     serializer_class = InformeSerializer

@@ -129,13 +129,20 @@ class MaterialEstudio(models.Model):
     descripcion = models.TextField(blank=True)
     archivo = models.FileField(upload_to='material_estudio/')
     nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
+
+    # NUEVOS CAMPOS
+    modulo = models.CharField(max_length=50, blank=True, null=True, verbose_name='Módulo')
+    sesion = models.CharField(max_length=50, blank=True, null=True, verbose_name='Sesión')
+
     fecha_subida = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     activo = models.BooleanField(default=True)
     orden = models.IntegerField(default=0)
+
+    subido_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     
     class Meta:
-        ordering = ['orden', '-fecha_subida']
+        ordering = ['modulo', 'sesion', 'orden', '-fecha_subida']
         verbose_name = 'Material de Estudio'
         verbose_name_plural = 'Materiales de Estudio'
     
