@@ -275,3 +275,982 @@ footer {
 .respuesta-contenido .btn-ver-mas i {
   font-size: 0.65rem;
 }
+
+/* ============================================
+   DROPDOWN DE USUARIO - ESCRITORIO
+   ============================================ */
+
+@media (min-width: 992px) {
+  .user-dropdown {
+    background-color: #ffffff;
+    border: 2px solid #db1010;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    min-width: 240px;
+    padding: 8px 0;
+    margin-top: 8px;
+  }
+
+  .user-dropdown .dropdown-header {
+    color: #db1010;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 18px 6px;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 4px;
+  }
+
+  .user-dropdown .dropdown-item {
+    color: #333;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .user-dropdown .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #db1010;
+  }
+
+  .user-dropdown .dropdown-item.active {
+    background-color: #db1010;
+    color: white;
+  }
+
+  .user-dropdown .dropdown-item i {
+    width: 20px;
+    text-align: center;
+  }
+
+  .user-dropdown .dropdown-item-text {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .user-dropdown .dropdown-item.text-danger {
+    color: #dc3545;
+    font-weight: 600;
+  }
+
+  .user-dropdown .dropdown-item.text-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .user-dropdown .dropdown-divider {
+    margin: 6px 0;
+    border-color: #e9ecef;
+  }
+}
+
+/* ============================================
+   DROPDOWN DE USUARIO - MÓVIL Y TABLET
+   ============================================ */
+
+@media (max-width: 991.98px) {
+  .user-dropdown {
+    position: static !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    margin-top: 8px !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .user-dropdown .dropdown-header {
+    color: #ffffff !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding: 10px 16px !important;
+    margin: 0 !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .user-dropdown .dropdown-item {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    padding: 12px 16px !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    text-align: left !important;
+  }
+
+  .user-dropdown .dropdown-item:last-child {
+    border-bottom: none !important;
+  }
+
+  .user-dropdown .dropdown-item:hover,
+  .user-dropdown .dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+  }
+
+  .user-dropdown .dropdown-item.active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    border-left: 4px solid #ffd700 !important;
+    padding-left: 12px !important;
+  }
+
+  .user-dropdown .dropdown-item i {
+    color: #ffffff !important;
+    width: 20px !important;
+    text-align: center !important;
+    font-size: 1rem !important;
+  }
+
+  .user-dropdown .dropdown-item-text {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .user-dropdown .dropdown-item-text i {
+    color: #ffffff !important;
+    width: 20px !important;
+    text-align: center !important;
+  }
+
+  .user-dropdown .dropdown-item.text-danger {
+    color: #ffcccc !important;
+    font-weight: 600 !important;
+    border-bottom: none !important;
+  }
+
+  .user-dropdown .dropdown-item.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.5) !important;
+    color: #ffffff !important;
+  }
+
+  .user-dropdown .dropdown-divider {
+    margin: 0 !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* Botón del dropdown en móvil */
+  .navbar .dropdown-toggle {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    border: none !important;
+    width: 100% !important;
+    text-align: left !important;
+    padding: 10px 0 !important;
+    font-size: 1rem !important;
+  }
+
+  .navbar .dropdown-toggle:hover,
+  .navbar .dropdown-toggle:focus {
+    color: #ffd700 !important;
+  }
+
+  .navbar .dropdown-toggle::after {
+    float: right;
+    margin-top: 8px;
+    color: #ffffff !important;
+  }
+}
+
+/* ============================================
+   RESPONSIVE - PANTALLAS MUY PEQUEÑAS
+   ============================================ */
+
+@media (max-width: 575.98px) {
+  .user-dropdown .dropdown-item {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .user-dropdown .dropdown-header {
+    font-size: 0.7rem !important;
+    padding: 8px 14px !important;
+  }
+
+  .user-dropdown .dropdown-item-text {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* ============================================
+   CRONOGRAMA - ESTADÍSTICAS
+   ============================================ */
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 4px solid #db1010;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.stat-card.stat-total { border-left-color: #db1010; }
+.stat-card.stat-presencial { border-left-color: #28a745; }
+.stat-card.stat-virtual { border-left-color: #17a2b8; }
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* ============================================
+   CALENDARIO COMPACTO
+   ============================================ */
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  max-width: 100%;
+}
+
+.calendar-header-cell {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.65rem;   /* ← más pequeño */
+  color: #6c757d;
+  text-transform: uppercase;
+  padding: 4px 2px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 2px 3px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.15s ease;
+  min-height: 32px;   /* ← antes 60px */
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  border: none;
+}
+
+.calendar-cell.has-event {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+  border-color: #db1010;
+  cursor: pointer;
+}
+
+.calendar-cell.has-event:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(219, 16, 16, 0.25);
+  z-index: 10;
+}
+
+.calendar-day {
+  font-weight: 700;
+  font-size: 0.7rem;   /* ← antes 0.9rem */
+  color: #333;
+  line-height: 1;
+}
+
+.calendar-events {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.calendar-event-dot {
+  width: 5px;    /* ← antes 8px */
+  height: 5px;
+  border-radius: 50%;
+}
+
+.dot-presencial {
+  background-color: #db1010;   /* ← Rojo intenso */
+}
+
+.dot-virtual {
+  background-color: #0d47a1;   /* ← Azul profundo */
+}
+
+/* Badges de tipo */
+.badge.bg-success {
+  background-color: #db1010 !important;  /* Presencial = rojo */
+}
+
+.badge.bg-info {
+  background-color: #0d47a1 !important;  /* Virtual = azul */
+}
+
+.calendar-more {
+  font-size: 0.55rem;
+  color: #db1010;
+  font-weight: 700;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ============================================
+   TARJETAS DE SESIÓN
+   ============================================ */
+
+.sesion-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border-left: 4px solid #db1010;
+  height: 100%;
+}
+
+.sesion-card.card-presencial {
+  border-left-color: #db1010;
+}
+
+.sesion-card.card-virtual {
+  border-left-color: #0d47a1;
+}
+
+.sesion-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.sesion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sesion-card-fecha {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.sesion-card-body {
+  padding: 16px;
+}
+
+.sesion-modulo {
+  color: #db1010;
+  font-weight: 700;
+}
+
+.sesion-num {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.sesion-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 8px;
+}
+
+/* ============================================
+   VISTA LINEAL (TIMELINE)
+   ============================================ */
+
+.modulo-group {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.modulo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #db1010;
+  color: #db1010;
+}
+
+.modulo-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.modulo-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #db1010 0%, #e9ecef 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #e9ecef;
+}
+
+/* Timeline dots */
+.timeline-dot.dot-presencial {
+  background-color: #db1010;
+  box-shadow: 0 0 0 2px #db1010;
+}
+
+.timeline-dot.dot-virtual {
+  background-color: #0d47a1;
+  box-shadow: 0 0 0 2px #0d47a1;
+}
+
+.timeline-content {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.timeline-content:hover {
+  background: #e9ecef;
+  transform: translateX(4px);
+}
+
+.timeline-sesion {
+  color: #db1010;
+  font-size: 1rem;
+}
+
+.timeline-details {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+/* ============================================
+   MODAL DE SESIÓN
+   ============================================ */
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: white;
+  border-radius: 12px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #db1010;
+  color: white;
+}
+
+.btn-close-custom {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-close-custom:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+.modal-card-body {
+  padding: 16px;
+}
+
+.sesion-detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 0.95rem;
+}
+
+/* ============================================
+   RESPONSIVE - CALENDARIO
+   ============================================ */
+
+/* Escritorio grande: Calendario más ancho pero aún compacto */
+@media (min-width: 992px) {
+  .calendar-grid {
+    gap: 3px;
+  }
+
+  .calendar-cell {
+    min-height: 38px;
+    max-height: 46px;
+  }
+
+  .calendar-day {
+    font-size: 0.75rem;
+  }
+}
+
+/* Tablet: Ajustar proporciones */
+@media (max-width: 991.98px) and (min-width: 577px) {
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-cell {
+    min-height: 34px;
+    max-height: 42px;
+    padding: 2px;
+  }
+
+  .calendar-day {
+    font-size: 0.7rem;
+  }
+}
+
+/* Móvil: Compacto */
+@media (max-width: 576px) {
+  .calendar-grid {
+    gap: 2px;
+  }
+
+  .calendar-cell {
+    min-height: 30px;
+    max-height: 36px;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  .calendar-day {
+    font-size: 0.65rem;
+  }
+
+  .calendar-header-cell {
+    font-size: 0.55rem;
+    padding: 3px 1px;
+  }
+
+  .calendar-event-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .calendar-more {
+    font-size: 0.5rem;
+  }
+
+  .modal-card {
+    max-width: 95%;
+  }
+
+  .modal-card-header,
+  .modal-card-body {
+    padding: 12px;
+  }
+}
+
+/* Móvil muy pequeño */
+@media (max-width: 400px) {
+  .calendar-cell {
+    min-height: 26px;
+    max-height: 32px;
+    padding: 1px;
+  }
+
+  .calendar-day {
+    font-size: 0.6rem;
+  }
+
+  .calendar-header-cell {
+    font-size: 0.5rem;
+  }
+}
+
+/* ============================================
+   BANNER CON CARRUSEL - SIN ESPACIO SUPERIOR
+   ============================================ */
+
+.banner-foro {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #db1010;
+  margin-top: 0;        /* ← SIN margen superior */
+  overflow: hidden;
+  line-height: 0;
+  display: block;
+}
+
+.banner-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: block;
+  line-height: 0;
+}
+
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 380px;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  display: block;
+}
+
+.banner-slide.active {
+  opacity: 1;
+  position: relative;   /* ← Define la altura según la imagen */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-slide {
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner-slide {
+    max-height: 100px;
+  }
+}
+
+/* ============================================
+   RETROALIMENTACIONES
+   ============================================ */
+
+.retroalimentacion-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.retroalimentacion-card {
+  background: #f8f9fa;
+  border-left: 3px solid #db1010;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+
+.retroalimentacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.retroalimentacion-usuario {
+  color: #db1010;
+  font-size: 0.9rem;
+}
+
+.retroalimentacion-contenido {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.retroalimentacion-contenido .comentario-texto.plegado {
+  max-height: 6em;   /* 4 líneas × 1.5em line-height */
+  overflow: hidden;
+  position: relative;
+}
+
+.retroalimentacion-contenido .comentario-texto.plegado::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2em;
+  background: linear-gradient(to bottom, transparent, #f8f9fa);
+  pointer-events: none;
+}
+
+.retroalimentacion-archivo {
+  border-top: 1px dashed #dee2e6;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+/* ============================================
+   MODAL GENÉRICO (usado por ambos modales)
+   ============================================ */
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-card {
+  background: white;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+  position: relative;
+  z-index: 100000;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.modal-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #db1010;
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.modal-card-header h5 {
+  color: white;
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-close-custom {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-close-custom:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.modal-card-body {
+  padding: 24px;
+}
+
+/* ============================================
+   CAMPOS DE FORMULARIO DENTRO DEL MODAL
+   ============================================ */
+
+.modal-card-body .form-label {
+  color: #333;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.modal-card-body .form-control {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 10px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-size: 0.95rem;
+}
+
+.modal-card-body .form-control:focus {
+  border-color: #db1010;
+  box-shadow: 0 0 0 0.2rem rgba(219, 16, 16, 0.15);
+  outline: none;
+}
+
+/* ============================================
+   ENLACE "¿OLVIDASTE TU CONTRASEÑA?" EN LOGIN
+   ============================================ */
+
+.login-card .btn-link {
+  color: #6c757d !important;
+  text-decoration: underline !important;
+  font-size: 0.85rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.login-card .btn-link:hover {
+  color: #db1010 !important;
+}
+
+/* ============================================
+   INPUT DE CONTRASEÑA CON OJO
+   ============================================ */
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .password-input {
+  padding-right: 45px;  /* Espacio para el ícono */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.1rem;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.password-toggle:hover {
+  color: #db1010;
+  background-color: rgba(219, 16, 16, 0.08);
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: #db1010;
+}
+
+.password-toggle i {
+  pointer-events: none;  /* El ícono no interfiere con el clic */
+}

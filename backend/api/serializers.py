@@ -1,11 +1,19 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession
+from .models import Comentario, Respuesta, MaterialEstudio, Informe, Enlace, Cronograma, ChatMessage, ChatSession, PerfilUsuario, Retroalimentacion
+
+class PerfilUsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PerfilUsuario
+        fields = ['tipo_acceso', 'niveles_permitidos', 'es_admin_niveles']
+        read_only_fields = ['niveles_permitidos', 'es_admin_niveles']
 
 class UserSerializer(serializers.ModelSerializer):
+    perfil = PerfilUsuarioSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'perfil']
 
 class RespuestaSerializer(serializers.ModelSerializer):
     usuario = UserSerializer(read_only=True)
@@ -14,7 +22,7 @@ class RespuestaSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Respuesta
-        fields = ['id', 'comentario', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
+        fields = ['id', 'comentario', 'nivel', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
                   'usuario', 'total_likes', 'usuario_ha_dado_like']
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion', 'usuario', 'likes', 'comentario']
         extra_kwargs = {
@@ -35,7 +43,7 @@ class ComentarioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Comentario
-        fields = ['id', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
+        fields = ['id', 'nivel', 'contenido', 'fecha_creacion', 'fecha_actualizacion', 
                   'usuario', 'archivo', 'likes', 'total_likes', 
                   'usuario_ha_dado_like', 'respuestas']
         read_only_fields = ['id', 'fecha_creacion', 'fecha_actualizacion', 'usuario', 'likes']
@@ -64,7 +72,8 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MaterialEstudio
-        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nombre_archivo', 
+        fields = ['id', 'titulo', 'descripcion', 'archivo', 'nivel',
+                  'modulo', 'sesion', 'nombre_archivo', 
                   'tamaño_archivo', 'fecha_subida', 'activo', 'orden']
         read_only_fields = ['fecha_subida', 'fecha_actualizacion']
     
@@ -82,6 +91,9 @@ class MaterialEstudioSerializer(serializers.ModelSerializer):
                 return f"{size / (1024 * 1024):.2f} MB"
         return "0 B"
 
+    def get_creador_username(self, obj):
+        return None
+
 class InformeSerializer(serializers.ModelSerializer):
     usuario = UserSerializer(read_only=True)
     nombre_archivo = serializers.SerializerMethodField()
@@ -89,7 +101,7 @@ class InformeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Informe
-        fields = ['id', 'usuario', 'titulo', 'descripcion', 'archivo', 
+        fields = ['id', 'usuario', 'titulo', 'descripcion', 'archivo', 'nivel',
                   'nombre_archivo', 'tamaño_archivo', 'fecha_subida']
         read_only_fields = ['fecha_subida', 'fecha_actualizacion']
     
@@ -107,11 +119,10 @@ class InformeSerializer(serializers.ModelSerializer):
                 return f"{size / (1024 * 1024):.2f} MB"
         return "0 B"
 
-
 class EnlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enlace
-        fields = ['id', 'titulo', 'descripcion', 'url', 'activo', 'orden', 'fecha_creacion']
+        fields = ['id', 'titulo', 'descripcion', 'url', 'nivel', 'activo', 'orden', 'fecha_creacion']
         read_only_fields = ['id', 'fecha_creacion']
 
 class CronogramaSerializer(serializers.ModelSerializer):
@@ -135,4 +146,34 @@ class ChatSessionSerializer(serializers.ModelSerializer):
         model = ChatSession
         fields = ['id', 'titulo', 'creado', 'actualizado', 'mensajes']
         read_only_fields = ['creado', 'actualizado']
+
+class RetroalimentacionSerializer(serializers.ModelSerializer):
+    usuario = UserSerializer(read_only=True)
+    nombre_archivo = serializers.SerializerMethodField()
+    tamaño_archivo = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Retroalimentacion
+        fields = [
+            'id', 'informe', 'usuario', 'comentario', 'archivo',
+            'nombre_archivo', 'tamaño_archivo', 
+            'fecha_creacion', 'fecha_actualizacion'
+        ]
+        read_only_fields = ['id', 'usuario', 'fecha_creacion', 'fecha_actualizacion']
+    
+    def get_nombre_archivo(self, obj):
+        if obj.archivo:
+            return obj.archivo.name.split('/')[-1]
+        return None
+    
+    def get_tamaño_archivo(self, obj):
+        if obj.archivo:
+            size = obj.archivo.size
+            if size < 1024:
+                return f"{size} B"
+            elif size < 1024 * 1024:
+                return f"{size / 1024:.2f} KB"
+            else:
+                return f"{size / (1024 * 1024):.2f} MB"
+        return None
 

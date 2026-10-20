@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ValidationError
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 '''
 def validate_pdf(file):
     import magic
@@ -33,8 +36,58 @@ def validate_pdf(file):
     
     return file
 
+#########################################################################
+
+class PerfilUsuario(models.Model):
+    TIPO_CHOICES = [
+        ('tipo1', 'Solo Nivel 1'),
+        ('tipo2', 'Solo Nivel 2'),
+        ('tipo3', 'Ambos Niveles'),
+    ]
+
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil')
+    tipo_acceso = models.CharField(max_length=10, choices=TIPO_CHOICES, default='tipo1')
+
+    class Meta:
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.get_tipo_acceso_display()}"
+
+    def puede_ver_nivel(self, nivel):
+        ''' Verifica si el usuario puede ver un nivel específico '''
+        if self.tipo_acceso == 'tipo3':
+            return True
+        return self.tipo_acceso == f'tipo{nivel}'
+
+    @property
+    def niveles_permitidos(self):
+        '''Lista de niveles que el usuario puede ver'''
+        if self.tipo_acceso == 'tipo3':
+            return [1, 2]
+        return [int(self.tipo_acceso.replace('tipo', ''))]
+
+    @property
+    def es_admin_niveles(self):
+        '''Verifica si puede ver ambos niveles'''
+        return self.tipo_acceso == 'tipo3'
+
+#Señal para crear perfil automáticamente
+@receiver(post_save, sender=User)
+def crear_perfil_usuario(sender, instance, created, **kwargs):
+    if created:
+        PerfilUsuario.objects.create(usuario=instance)
+
+@receiver(post_save, sender=User)
+def guardar_perfil_usuario(sender, instance, **kwargs):
+    instance.perfil.save()
+
+########################################################################
+
 class Comentario(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
     contenido = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -56,6 +109,7 @@ class Comentario(models.Model):
 class Respuesta(models.Model):
     comentario = models.ForeignKey(Comentario, on_delete=models.CASCADE, related_name='respuestas')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
     contenido = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
@@ -74,13 +128,21 @@ class MaterialEstudio(models.Model):
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     archivo = models.FileField(upload_to='material_estudio/')
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
+
+    # NUEVOS CAMPOS
+    modulo = models.CharField(max_length=50, blank=True, null=True, verbose_name='Módulo')
+    sesion = models.CharField(max_length=50, blank=True, null=True, verbose_name='Sesión')
+
     fecha_subida = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     activo = models.BooleanField(default=True)
     orden = models.IntegerField(default=0)
+
+    subido_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     
     class Meta:
-        ordering = ['orden', '-fecha_subida']
+        ordering = ['modulo', 'sesion', 'orden', '-fecha_subida']
         verbose_name = 'Material de Estudio'
         verbose_name_plural = 'Materiales de Estudio'
     
@@ -95,6 +157,7 @@ class Informe(models.Model):
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     archivo = models.FileField(upload_to='informes/', validators=[validate_pdf])
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
     fecha_subida = models.DateTimeField(auto_now_add=True)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
     
@@ -113,6 +176,7 @@ class Enlace(models.Model):
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True)
     url = models.URLField()
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     orden = models.IntegerField(default=0)
@@ -131,7 +195,7 @@ class Cronograma(models.Model):
         ('virtual', 'Virtual'),
     ]
     
-    nivel = models.IntegerField()
+    nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
     mes = models.CharField(max_length=20)
     modulo = models.CharField(max_length=20)
     sesion = models.CharField(max_length=30)
@@ -185,3 +249,33 @@ class ChatMessage(models.Model):
     
     def __str__(self):
         return f"{self.rol} - {self.creado.strftime('%d/%m/%Y %H:%M')}"
+
+class Retroalimentacion(models.Model):
+    informe = models.ForeignKey(
+        Informe, 
+        on_delete=models.CASCADE, 
+        related_name='retroalimentaciones'
+    )
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    comentario = models.TextField()
+    archivo = models.FileField(
+        upload_to='retroalimentaciones/', 
+        null=True, 
+        blank=True,
+        validators=[validate_pdf]
+    )
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-fecha_creacion']
+        verbose_name = 'Retroalimentación'
+        verbose_name_plural = 'Retroalimentaciones'
+    
+    def __str__(self):
+        return f"Retroalimentación de {self.usuario.username} al informe #{self.informe.id}"
+    
+    def nombre_archivo(self):
+        if self.archivo:
+            return self.archivo.name.split('/')[-1]
+        return None

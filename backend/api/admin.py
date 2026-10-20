@@ -1,42 +1,106 @@
 from django.contrib import admin
-from .models import Comentario, MaterialEstudio, Respuesta, Informe, Enlace, Cronograma, ChatSession, ChatMessage
+from .models import Comentario, MaterialEstudio, Respuesta, Informe, Enlace, Cronograma, ChatSession, ChatMessage, PerfilUsuario, Retroalimentacion
 
 @admin.register(Comentario)
 class ComentarioAdmin(admin.ModelAdmin):
-    list_display = ('id', 'usuario', 'contenido', 'fecha_creacion', 'total_likes')
-    list_filter = ('fecha_creacion', 'usuario')
+    list_display = ('id', 'usuario', 'nivel', 'contenido_corto', 'fecha_creacion', 'total_likes')
+    list_filter = ('nivel', 'fecha_creacion', 'usuario')
     search_fields = ('contenido', 'usuario__username')
     filter_horizontal = ('likes',)
+    ordering = ('-fecha_creacion',)
+    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+    
+    fieldsets = (
+        ('Información', {
+            'fields': ('usuario', 'nivel', 'contenido', 'archivo')
+        }),
+        ('Interacciones', {
+            'fields': ('likes',),
+            'classes': ('collapse',)
+        }),
+        ('Fechas', {
+            'fields': ('fecha_creacion', 'fecha_actualizacion'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def contenido_corto(self, obj):
+        if len(obj.contenido) > 60:
+            return obj.contenido[:60] + '...'
+        return obj.contenido
+    contenido_corto.short_description = 'Contenido'
 
 @admin.register(Respuesta)
 class RespuestaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'comentario', 'usuario', 'contenido', 'fecha_creacion', 'total_likes')
-    list_filter = ('fecha_creacion', 'usuario')
+    list_display = ('id', 'comentario', 'usuario', 'nivel', 'contenido_corto', 'fecha_creacion', 'total_likes')
+    list_filter = ('nivel', 'fecha_creacion', 'usuario')
     search_fields = ('contenido', 'usuario__username')
     filter_horizontal = ('likes',)
+    ordering = ('-fecha_creacion',)
+    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+    
+    fieldsets = (
+        ('Información', {
+            'fields': ('comentario', 'usuario', 'nivel', 'contenido')
+        }),
+        ('Interacciones', {
+            'fields': ('likes',),
+            'classes': ('collapse',)
+        }),
+        ('Fechas', {
+            'fields': ('fecha_creacion', 'fecha_actualizacion'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def contenido_corto(self, obj):
+        if len(obj.contenido) > 60:
+            return obj.contenido[:60] + '...'
+        return obj.contenido
+    contenido_corto.short_description = 'Contenido'
+
+'''
+@admin.register(MaterialEstudio)
+class MaterialEstudioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'titulo', 'nivel', 'fecha_subida', 'activo', 'orden')
+    list_filter = ('nivel', 'activo', 'fecha_subida')
+    search_fields = ('titulo', 'descripcion')
+    ordering = ('nivel', 'orden', '-fecha_subida')
+    fields = ('titulo', 'descripcion', 'archivo', 'nivel', 'activo', 'orden')'''
 
 @admin.register(MaterialEstudio)
 class MaterialEstudioAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'fecha_subida', 'activo', 'orden')
-    list_filter = ('activo', 'fecha_subida')
-    search_fields = ('titulo', 'descripcion')
-    ordering = ('orden', '-fecha_subida')
-    fields = ('titulo', 'descripcion', 'archivo', 'activo', 'orden')
+    list_display = ('id', 'titulo', 'nivel', 'modulo', 'sesion', 'fecha_subida', 'activo', 'orden')
+    list_filter = ('nivel', 'modulo', 'sesion', 'activo', 'fecha_subida')
+    search_fields = ('titulo', 'descripcion', 'modulo', 'sesion')
+    ordering = ('nivel', 'modulo', 'sesion', 'orden', '-fecha_subida')
+    fields = ('titulo', 'descripcion', 'archivo', 'nivel', 'modulo', 'sesion', 'activo', 'orden')
 
 @admin.register(Informe)
 class InformeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'usuario', 'fecha_subida')
-    list_filter = ('fecha_subida', 'usuario')
+    list_display = ('id', 'titulo', 'usuario', 'nivel', 'fecha_subida')
+    list_filter = ('nivel', 'fecha_subida', 'usuario')
     search_fields = ('titulo', 'descripcion', 'usuario__username')
     ordering = ('-fecha_subida',)
+    readonly_fields = ('fecha_subida', 'fecha_actualizacion')
+    
+    fieldsets = (
+        ('Información', {
+            'fields': ('usuario', 'nivel', 'titulo', 'descripcion', 'archivo')
+        }),
+        ('Fechas', {
+            'fields': ('fecha_subida', 'fecha_actualizacion'),
+            'classes': ('collapse',)
+        }),
+    )
 
 @admin.register(Enlace)
 class EnlaceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'url', 'activo', 'orden', 'fecha_creacion')
-    list_filter = ('activo', 'fecha_creacion')
+    list_display = ('id', 'titulo', 'url', 'nivel', 'activo', 'orden', 'fecha_creacion')
+    list_filter = ('nivel', 'activo', 'fecha_creacion')
     search_fields = ('titulo', 'descripcion', 'url')
-    ordering = ('orden', '-fecha_creacion')
-    fields = ('titulo', 'descripcion', 'url', 'activo', 'orden')
+    ordering = ('nivel', 'orden', '-fecha_creacion')
+    fields = ('titulo', 'descripcion', 'url', 'nivel', 'activo', 'orden')
 
 @admin.register(Cronograma)
 class CronogramaAdmin(admin.ModelAdmin):
@@ -129,7 +193,6 @@ class ChatSessionAdmin(admin.ModelAdmin):
         self.message_user(request, f'{actualizados} sesiones desactivadas')
     desactivar_sesiones.short_description = 'Desactivar sesiones seleccionadas'
 
-
 @admin.register(ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'sesion', 'rol', 'contenido_corto', 'creado')
@@ -153,3 +216,50 @@ class ChatMessageAdmin(admin.ModelAdmin):
             return obj.contenido[:80] + '...'
         return obj.contenido
     contenido_corto.short_description = 'Contenido'
+
+# ==================== NIVEL DE USUARIO ====================
+
+@admin.register(PerfilUsuario)
+class PerfilUsuarioAdmin(admin.ModelAdmin):
+    list_display = ('id', 'usuario', 'tipo_acceso')
+    list_filter = ('tipo_acceso',)
+    search_fields = ('usuario__username', 'usuario__email')
+    ordering = ('usuario__username',)
+    fieldsets = (
+        ('Usuario', {
+            'fields': ('usuario',)
+        }),
+        ('Acceso', {
+            'fields': ('tipo_acceso',)
+        }),
+    )
+
+@admin.register(Retroalimentacion)
+class RetroalimentacionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'informe', 'usuario', 'comentario_corto', 'tiene_archivo', 'fecha_creacion')
+    list_filter = ('fecha_creacion', 'usuario')
+    search_fields = ('comentario', 'usuario__username', 'informe__titulo')
+    ordering = ('-fecha_creacion',)
+    readonly_fields = ('fecha_creacion', 'fecha_actualizacion')
+    
+    fieldsets = (
+        ('Información', {
+            'fields': ('informe', 'usuario', 'comentario', 'archivo')
+        }),
+        ('Fechas', {
+            'fields': ('fecha_creacion', 'fecha_actualizacion'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def comentario_corto(self, obj):
+        if len(obj.comentario) > 60:
+            return obj.comentario[:60] + '...'
+        return obj.comentario
+    comentario_corto.short_description = 'Comentario'
+    
+    def tiene_archivo(self, obj):
+        return bool(obj.archivo)
+    tiene_archivo.boolean = True
+    tiene_archivo.short_description = 'PDF'
+

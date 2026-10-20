@@ -3,32 +3,38 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import Banner from './Banner';
 
-function Enlaces({ user, onLogout }) {
+function Enlaces({ user, onLogout, nivelActual, setNivelActual }) {
   const [enlaces, setEnlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Detectar si el usuario puede cambiar de nivel
+  const puedeCambiarNivel = user?.perfil?.tipo_acceso === 'tipo3';
+
+  // Constante de URL (cambiar al pasar a producción)
+  // const API_BASE_URL = 'http://localhost:8000/api/';
+  // const API_BASE_URL = 'https://escueladecuadros.sytes.net/api/'; /* Descomentar para producción */
+
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     cargarEnlaces();
-  }, []);
+  }, [nivelActual]);
 
   const cargarEnlaces = async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('access_token');
-      
-      const response = await fetch('https://escueladecuadros.sytes.net/api/enlaces/', {
+
+      // Construir la URL según el nivel
+      const url = puedeCambiarNivel && nivelActual
+        ? `${API_BASE_URL}enlaces/?nivel=${nivelActual}`
+        : `${API_BASE_URL}enlaces/`;
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
-        }, 
-        
-      /*COMENTAR PARA ENTORNO LOCAL  
-        
-      const response = await fetch('http://localhost:8000/api/enlaces/', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }, */
-      
+        },      
       });
       
       if (response.ok) {
@@ -47,7 +53,12 @@ function Enlaces({ user, onLogout }) {
 
   return (
     <>
-      <Navbar user={user} onLogout={onLogout} />
+      <Navbar
+        user={user}
+        onLogout={onLogout}
+        nivelActual={nivelActual}
+        setNivelActual={setNivelActual}
+      />
       <Banner />
       <div className="container foro-container">
         <div className="row">
@@ -55,7 +66,7 @@ function Enlaces({ user, onLogout }) {
             <div className="mb-4">
               <h2>
                 <i className="bi bi-link-45deg me-2"></i>
-                Sesiones Online
+                Sesiones Online - Nivel {nivelActual}
               </h2>
               <p className="text-muted"></p>
             </div>
@@ -82,6 +93,14 @@ function Enlaces({ user, onLogout }) {
                     <div className="card h-100 shadow-sm hover-shadow">
                       <div className="card-body">
                         <h5 className="card-title">{enlace.titulo}</h5>
+
+                        {/* Mostrar nivel solo para usuarios tipo3 */}
+                        {puedeCambiarNivel && (
+                          <span className="badge bg-secondary mb-2">
+                            Nivel {enlace.nivel}
+                          </span>
+                        )}
+
                         {enlace.descripcion && (
                           <p className="card-text text-muted">{enlace.descripcion}</p>
                         )}
