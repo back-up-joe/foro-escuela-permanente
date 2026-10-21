@@ -47,7 +47,7 @@ def enviar_notificacion(asunto, mensaje_texto, mensaje_html, nivel):
                 [usuario.email]
             )
             email.attach_alternative(mensaje_html, 'text/html')
-            email.send(fail_silently=True)
+            # email.send(fail_silently=True) # Deshabilita envío
             print(f"Enviado a {usuario.email}")
         except Exception as e:
             print(f"Error al enviar a {usuario.email}: {e}")
@@ -68,7 +68,7 @@ def enviar_notificacion_usuario(asunto, mensaje_texto, mensaje_html, usuario):
             [usuario.email]
         )
         email.attach_alternative(mensaje_html, 'text/html')
-        email.send(fail_silently=True)
+        # email.send(fail_silently=True) # Deshabilita envío
         print(f"Notificación enviada a {usuario.email}")
     except Exception as e:
         print(f"Error al enviar a {usuario.email}: {e}")
