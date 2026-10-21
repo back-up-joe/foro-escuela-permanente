@@ -17,7 +17,7 @@ function Banner() {
   useEffect(() => {
     const intervalo = setInterval(() => {
       setIndiceActual((prev) => (prev + 1) % imagenes.length);
-    }, 12000);
+    }, 24000);
 
     return () => clearInterval(intervalo);
   }, [imagenes.length]);

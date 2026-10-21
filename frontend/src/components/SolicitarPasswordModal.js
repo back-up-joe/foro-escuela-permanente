@@ -17,7 +17,7 @@ function SolicitarPasswordModal({ onClose }) {
         <div className="modal-card-body">
           <p className="text-muted small mb-3">
             <i className="bi bi-info-circle me-1"></i>
-            Completa el formulario y el administrador del foro se pondrá en contacto contigo en un máximo de 48 horas.
+            Completa el formulario y el administrador del foro se pondrá en contacto contigo en las próximas 48 a 72 horas.
           </p>
 
           <form

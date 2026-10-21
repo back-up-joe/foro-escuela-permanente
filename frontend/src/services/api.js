@@ -17,12 +17,18 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ============ REFRESH AUTOMÁTICO ============
+// ============ REFRESH AUTOMÁTICO ROBUSTO ============
+
 let isRefreshing = false;
 let refreshSubscribers = [];
 
 const onRefreshed = (newToken) => {
-  refreshSubscribers.forEach((cb) => cb(newToken));
+  refreshSubscribers.forEach((cb) => cb(null, newToken));
+  refreshSubscribers = [];
+};
+
+const onRefreshFailed = (error) => {
+  refreshSubscribers.forEach((cb) => cb(error, null));
   refreshSubscribers = [];
 };
 
@@ -40,47 +46,62 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      const refreshToken = localStorage.getItem('refresh_token');
-
-      if (!refreshToken) {
-        logoutAndRedirect();
-        return Promise.reject(error);
-      }
-
-      if (isRefreshing) {
-        return new Promise((resolve) => {
-          refreshSubscribers.push((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            resolve(api(originalRequest));
-          });
-        });
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        const response = await axios.post(
-          `${API_URL}token/refresh/`,
-          { refresh: refreshToken }
-        );
-        const newToken = response.data.access;
-        localStorage.setItem('access_token', newToken);
-        onRefreshed(newToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        logoutAndRedirect();
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+    // Si no es 401 o ya se reintentó, rechazar directo
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    // Si es el propio endpoint de refresh, no reintentar
+    if (originalRequest.url?.includes('/token/refresh/')) {
+      logoutAndRedirect();
+      return Promise.reject(error);
+    }
+
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) {
+      logoutAndRedirect();
+      return Promise.reject(error);
+    }
+
+    // Si ya hay un refresh en curso, esperar
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        refreshSubscribers.push((err, token) => {
+          if (err || !token) {
+            reject(err || new Error('Refresh failed'));
+          } else {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            resolve(api(originalRequest));
+          }
+        });
+      });
+    }
+
+    // Iniciar refresh
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    try {
+      const response = await axios.post(
+        `${API_URL}token/refresh/`,
+        { refresh: refreshToken },
+        { timeout: 10000 }   // ← timeout de 10s al refresh
+      );
+      const newToken = response.data.access;
+      localStorage.setItem('access_token', newToken);
+      onRefreshed(newToken);
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return api(originalRequest);
+    } catch (refreshError) {
+      onRefreshFailed(refreshError);
+      logoutAndRedirect();
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;   // ← SIEMPRE se resetea
+    }
   }
 );
+
 // ============ FIN REFRESH ============
 
 export const login = async (username, password) => {
@@ -107,6 +128,7 @@ export const createComentario = async (data) => {
   }
   const response = await api.post('comentarios/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 60000,   // 60 segundos para subir PDFs grandes
   });
   return response.data;
 };
