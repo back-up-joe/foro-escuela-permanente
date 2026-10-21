@@ -29,6 +29,8 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log('[1] handleSubmit INICIO');
     
     if (nuevoComentario.length > MAX_CARACTERES) {
       setError(`El comentario no puede superar los ${MAX_CARACTERES} caracteres`);
@@ -49,16 +51,41 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
         archivo: archivo,
         nivel: nivelActual,  // ENVIAR NIVEL ACTUAL
       };
-      await createComentario(data);
+
+      console.log('Antes de createComentario. data', {
+          contenido: data.contenido?.substring(0, 30), 
+          archivo: data.archivo?.name, 
+          nivel: data.nivel 
+        });
+      
+      const t0 = performance.now();
+      const resultado = await createComentario(data);
+      const t1 = performance.now();
+      console.log(`[3] createComentario OK en ${(t1-t0).toFixed(0)}ms. Respuesta:`, resultado);
+
       setNuevoComentario('');
       setArchivo(null);
       const fileInput = document.getElementById('archivoInput');
       if (fileInput) fileInput.value = '';
-      await cargarComentarios();
+      
+      console.log('[4] Antes de cargarComentarios');
+      await createComentario(data);
+      console.log('[5] cargarComentarios OK');
+
     } catch (err) {
+
+      console.error('[X] ERROR en handleSubmit:', err);
+      console.error('Mensaje:', err.message);
+      console.error('Status:', err.response?.status);
+      console.error('Data:', err.response?.data);
+      console.error('Code:', err.code);
+
       setError('Error al crear el comentario');
       console.error(err);
-    } finally {
+    } finally {         
+      
+      console.log('[6] FINALLY - setLoading(false)');
+
       setLoading(false);
     }
   };
