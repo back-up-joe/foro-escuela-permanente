@@ -29,8 +29,6 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log('[1] handleSubmit INICIO');
     
     if (nuevoComentario.length > MAX_CARACTERES) {
       setError(`El comentario no puede superar los ${MAX_CARACTERES} caracteres`);
@@ -52,6 +50,28 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
         nivel: nivelActual,  // ENVIAR NIVEL ACTUAL
       };
 
+      // CAPTURAR la respuesta del POST
+      const nuevoComentarioCreado = await createComentario(data);
+
+      // AGREGAR al state local INMEDIATAMENTE (sin esperar GET)
+      setComentarios(prev => [nuevoComentarioCreado, ...prev]);
+
+      // Reset del formulario
+      setNuevoComentario('');
+      setArchivo(null);
+      const fileInput = document.getElementById('archivoInput');
+      if (fileInput) fileInput.value = '';
+
+      // Recargar en BACKGROUND (por si hay comentarios de otros usuarios)
+      cargarComentarios().catch(err => console.error('Recarga background:', err));
+
+    } catch (err) {
+      console.error('Error al crear comentario:', err);
+      setError('Error al crear el comentario');
+    } finally {
+      setLoading(false);
+    }
+    /**
       console.log('Antes de createComentario. data', {
           contenido: data.contenido?.substring(0, 30), 
           archivo: data.archivo?.name, 
@@ -87,25 +107,57 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
       console.log('[6] FINALLY - setLoading(false)');
 
       setLoading(false);
-    }
+    }  */
   };
 
   const handleLike = async (id) => {
+    try {
+      const resultado = await likeComentario(id);
+    
+      // Actualizar solo el comentario afectado
+      setComentarios(prev => prev.map(c => 
+        c.id === id 
+          ? { ...c, total_likes: resultado.total_likes, usuario_ha_dado_like: resultado.liked }
+          : c
+      ));
+    } catch (err) {
+      console.error('Error al dar like:', err);
+    }
+
+    /*
     try {
       await likeComentario(id);
       await cargarComentarios();
     } catch (err) {
       console.error('Error al dar like:', err);
-    }
+    } */
   };
 
   const handleResponder = async (id, contenido, nivel) => {
+    
+    try {
+      const respuestaCreada = await responderComentario(id, contenido, nivel);
+    
+      // Actualizar el comentario padre con la nueva respuesta
+      setComentarios(prev => prev.map(c => 
+        c.id === id 
+          ? { ...c, respuestas: [...(c.respuestas || []), respuestaCreada] }
+          : c
+      ));
+    
+      // Recargar en background
+      cargarComentarios().catch(err => console.error('Recarga:', err));
+    } catch (err) {
+      console.error('Error al responder:', err);
+    }
+
+    /*
     try {
       await responderComentario(id, contenido, nivel);
       await cargarComentarios();
     } catch (err) {
       console.error('Error al responder:', err);
-    }
+    } */
   };
 
   return (
