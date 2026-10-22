@@ -123,7 +123,6 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
     } catch (err) {
       console.error('Error al dar like:', err);
     }
-
     /*
     try {
       await likeComentario(id);
@@ -150,7 +149,6 @@ function Foro({ user, onLogout, nivelActual, setNivelActual }) {
     } catch (err) {
       console.error('Error al responder:', err);
     }
-
     /*
     try {
       await responderComentario(id, contenido, nivel);

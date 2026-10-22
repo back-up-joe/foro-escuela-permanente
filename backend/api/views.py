@@ -1,5 +1,6 @@
 from urllib import request
 from .utils_notificaciones import enviar_notificacion_usuario
+from .signals import _enviar_en_background
 
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
@@ -146,7 +147,8 @@ class CambiarPasswordView(generics.GenericAPIView):
             <p>Si no fuiste tú, contacta al administrador.</p>
         </div>
         """
-        enviar_notificacion_usuario(asunto, texto, html, user)
+        # enviar_notificacion_usuario(asunto, texto, html, user)
+        _enviar_en_background(enviar_notificacion_usuario, asunto, texto, html, user)
         
         return Response({
             'success': True,

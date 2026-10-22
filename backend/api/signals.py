@@ -6,6 +6,12 @@ from .models import (
     MaterialEstudio, Enlace, Cronograma
 )
 from .utils_notificaciones import enviar_notificacion, enviar_notificacion_usuario
+import threading
+
+def _enviar_en_background(func, *args, **kwargs):
+    """Ejecuta el envío de emails en un thread separado, sin bloquear el request"""
+    thread = threading.Thread(target=func, args=args, kwargs=kwargs, daemon=True)
+    thread.start()
 
 def _detalle_nivel(nivel, usuario_tipo3):
     """Devuelve texto que indique el nivel para tipo3"""
@@ -36,7 +42,8 @@ Ingresa al foro para ver más detalles.
         <p><a href="https://escueladecuadros.sytes.net/foro" style="color: #db1010;">Ir al foro</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=Respuesta)
 def notificar_respuesta(sender, instance, created, **kwargs):
@@ -56,7 +63,8 @@ def notificar_respuesta(sender, instance, created, **kwargs):
         <p><a href="https://escueladecuadros.sytes.net/foro" style="color: #db1010;">Ver respuesta</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=Informe)
 def notificar_informe(sender, instance, created, **kwargs):
@@ -73,7 +81,8 @@ def notificar_informe(sender, instance, created, **kwargs):
         <p><a href="https://escueladecuadros.sytes.net/informes" style="color: #db1010;">Ver informes</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=Retroalimentacion)
 def notificar_retroalimentacion(sender, instance, created, **kwargs):
@@ -93,7 +102,8 @@ def notificar_retroalimentacion(sender, instance, created, **kwargs):
         <p><a href="https://escueladecuadros.sytes.net/informes" style="color: #db1010;">Ver retroalimentación</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=MaterialEstudio)
 def notificar_material(sender, instance, created, **kwargs):
@@ -111,7 +121,8 @@ def notificar_material(sender, instance, created, **kwargs):
         <p><a href="https://escueladecuadros.sytes.net/material-estudio" style="color: #db1010;">Ver material</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=Enlace)
 def notificar_enlace(sender, instance, created, **kwargs):
@@ -128,7 +139,8 @@ def notificar_enlace(sender, instance, created, **kwargs):
         <p><a href="{instance.url}" style="color: #db1010;">Abrir enlace</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
 
 @receiver(post_save, sender=Cronograma)
 def notificar_cronograma(sender, instance, created, **kwargs):
@@ -147,5 +159,6 @@ def notificar_cronograma(sender, instance, created, **kwargs):
         <p><a href="https://escueladecuadros.sytes.net/cronograma" style="color: #db1010;">Ver cronograma</a></p>
     </div>
     """
-    enviar_notificacion(asunto, texto, html, nivel)
+    # enviar_notificacion(asunto, texto, html, nivel)
+    _enviar_en_background(enviar_notificacion, asunto, texto, html, nivel)
     
