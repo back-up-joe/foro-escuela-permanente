@@ -301,6 +301,21 @@ function MaterialEstudio({ user, onLogout, nivelActual, setNivelActual }) {
                     </select>
                   </div>
                   <div className="col-md-4">
+                    <label className="form-label small text-muted mb-1">
+                      <i className="bi bi-funnel me-1"></i>Sesión
+                    </label>
+                    <select
+                      className="form-select form-select-sm"
+                      value={filtroSesion}
+                      onChange={(e) => setFiltroSesion(e.target.value)}
+                    >
+                      <option value="">Todas las sesiones</option>
+                      {sesionesDisponibles.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-4">
                     <button
                       className="btn btn-outline-secondary btn-sm"
                       onClick={limpiarFiltros}
