@@ -122,7 +122,7 @@ class InformeSerializer(serializers.ModelSerializer):
 class EnlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enlace
-        fields = ['id', 'titulo', 'descripcion', 'url', 'nivel', 'activo', 'orden', 'fecha_creacion']
+        fields = ['id', 'titulo', 'descripcion', 'url', 'nivel', 'es_proxima_sesion', 'activo', 'orden', 'fecha_creacion']
         read_only_fields = ['id', 'fecha_creacion']
 
 class CronogramaSerializer(serializers.ModelSerializer):

@@ -96,11 +96,11 @@ class InformeAdmin(admin.ModelAdmin):
 
 @admin.register(Enlace)
 class EnlaceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'titulo', 'url', 'nivel', 'activo', 'orden', 'fecha_creacion')
-    list_filter = ('nivel', 'activo', 'fecha_creacion')
+    list_display = ('id', 'titulo', 'url', 'nivel', 'es_proxima_sesion', 'activo', 'orden', 'fecha_creacion')
+    list_filter = ('nivel', 'es_proxima_sesion', 'activo', 'fecha_creacion')
     search_fields = ('titulo', 'descripcion', 'url')
     ordering = ('nivel', 'orden', '-fecha_creacion')
-    fields = ('titulo', 'descripcion', 'url', 'nivel', 'activo', 'orden')
+    fields = ('titulo', 'descripcion', 'url', 'nivel', 'es_proxima_sesion', 'activo', 'orden')
 
 @admin.register(Cronograma)
 class CronogramaAdmin(admin.ModelAdmin):

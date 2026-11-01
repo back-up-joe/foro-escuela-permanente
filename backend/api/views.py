@@ -568,6 +568,33 @@ class EnlaceViewSet(viewsets.ModelViewSet):
         
         serializer.save(nivel=nivel)
 
+    # endpoint para obtener SOLO la próxima sesión
+    @action(detail=False, methods=['get'])
+    def proxima(self, request):
+        """Devuelve la próxima sesión online (o null si no hay)"""
+        user = request.user
+        perfil = user.perfil
+        nivel = request.query_params.get('nivel')
+    
+        # Base según nivel
+        if perfil.tipo_acceso == 'tipo3':
+            if nivel:
+                qs = Enlace.objects.filter(nivel=nivel, activo=True)
+            else:
+                qs = Enlace.objects.filter(activo=True)
+        else:
+            qs = Enlace.objects.filter(
+                nivel__in=perfil.niveles_permitidos, activo=True
+            )
+    
+        # Filtrar solo la marcada como próxima sesión (la más reciente)
+        proxima = qs.filter(es_proxima_sesion=True).order_by('-fecha_creacion').first()
+    
+        if not proxima:
+            return Response({'proxima': None})
+    
+        return Response({'proxima': EnlaceSerializer(proxima).data})
+
 class CronogramaViewSet(viewsets.ModelViewSet):
     serializer_class = CronogramaSerializer
     permission_classes = [permissions.IsAuthenticated]

@@ -184,6 +184,12 @@ export const getEnlaces = async () => {
   return response.data;
 };
 
+export const getProximaSesion = async (nivel = null) => {
+  const url = nivel ? `enlaces/proxima/?nivel=${nivel}` : 'enlaces/proxima/';
+  const response = await api.get(url);
+  return response.data;
+};
+
 /////////////////////////////////////// Cronograma
 export const getCronograma = async () => {
   const response = await api.get('cronograma/');

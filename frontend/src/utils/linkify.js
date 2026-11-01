@@ -1,59 +1,71 @@
 import React from 'react';
 
-// Lista de TLDs comunes (puedes agregar más si quieres)
-const TLDS = 'com|net|org|edu|gov|cl|ar|mx|pe|co|es|info|io|app|dev|me';
+// TLDs comunes
+const TLDS = 'com|net|org|edu|gov|cl|ar|mx|pe|co|es|info|io|app|dev|me|tv|xyz|site|online';
 
-/**
- * Convierte URLs en texto plano a enlaces <a> clickeables.
- * Detecta:
- *   - https://dominio.com
- *   - http://dominio.com
- *   - www.dominio.com
- *   - dominio.com (sin protocolo, con TLD válido)
- */
+// Regex unificado (una sola pasada, no doble match)
+const URL_REGEX = new RegExp(
+  // 1) http(s)://...  o  2) www...  o  3) dominio.tld[/path]
+  `(https?:\\/\\/[^\\s<]+|www\\.[^\\s<]+|[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\\.(?:${TLDS})\\b(?:\\/[^\\s<]*)?)`,
+  'gi'
+);
+
 export function linkify(text) {
   if (!text) return text;
 
-  // Regex ampliado:
-  //   1) http(s)://...
-  //   2) www...
-  //   3) dominio.tld (sin protocolo, con TLD de la lista)
-  const urlRegex = new RegExp(
-    `((https?:\\/\\/|www\\.)[^\\s<]+|\\b[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*\\.(?:${TLDS})\\b(?:\\/[^\\s<]*)?)`,
-    'g'
-  );
+  const nodes = [];
+  let lastIndex = 0;
+  let match;
+  let key = 0;
 
-  const parts = text.split(urlRegex);
+  // Reset regex (por seguridad al ser global)
+  URL_REGEX.lastIndex = 0;
 
-  return parts.map((part, index) => {
-    if (!part) return null;
+  while ((match = URL_REGEX.exec(text)) !== null) {
+    const matchedUrl = match[0];
+    const startIndex = match.index;
 
-    // Detectar si es URL
-    const isFullUrl = /^(https?:\/\/|www\.)/.test(part);
-    const isBareDomain = new RegExp(`\\b[a-z0-9-]+\\.(?:${TLDS})\\b`, 'i').test(part);
-
-    if (isFullUrl || isBareDomain) {
-      // Agregar https:// si no tiene protocolo
-      let href = part;
-      if (part.startsWith('www.')) {
-        href = `https://${part}`;
-      } else if (!/^https?:\/\//.test(part)) {
-        href = `https://${part}`;
-      }
-
-      return (
-        <a
-          key={index}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ wordBreak: 'break-word' }}
-        >
-          {part}
-        </a>
+    // Texto normal antes del match
+    if (startIndex > lastIndex) {
+      nodes.push(
+        <React.Fragment key={`text-${key++}`}>
+          {text.substring(lastIndex, startIndex)}
+        </React.Fragment>
       );
     }
 
-    return <React.Fragment key={index}>{part}</React.Fragment>;
-  });
+    // Determinar href
+    let href = matchedUrl;
+    if (matchedUrl.startsWith('www.')) {
+      href = `https://${matchedUrl}`;
+    } else if (!/^https?:\/\//i.test(matchedUrl)) {
+      href = `https://${matchedUrl}`;
+    }
+
+    // Agregar link
+    nodes.push(
+      <a
+        key={`link-${key++}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ wordBreak: 'break-word' }}
+      >
+        {matchedUrl}
+      </a>
+    );
+
+    lastIndex = startIndex + matchedUrl.length;
+  }
+
+  // Texto restante después del último match
+  if (lastIndex < text.length) {
+    nodes.push(
+      <React.Fragment key={`text-${key++}`}>
+        {text.substring(lastIndex)}
+      </React.Fragment>
+    );
+  }
+
+  return nodes.length > 0 ? nodes : text;
 }
