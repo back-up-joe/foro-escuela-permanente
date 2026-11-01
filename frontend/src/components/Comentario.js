@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Respuesta from './Respuesta';
+import { linkify } from '../utils/linkify';
 
 function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
   const [mostrarRespuesta, setMostrarRespuesta] = useState(false);
@@ -121,7 +122,7 @@ function Comentario({ comentario, onLike, onResponder, usuarioActual }) {
       {/* CONTENIDO CON PLEGADO */}
       <div className="comentario-contenido">
         <div className={`comentario-texto ${!expandido && contenidoLargo ? 'plegado' : ''}`}>
-          {contenidoMostrar}
+          {linkify(contenidoMostrar)}
         </div>
         
         {contenidoLargo && (

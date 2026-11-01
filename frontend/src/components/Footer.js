@@ -43,6 +43,20 @@ function Footer() {
               <i className="bi bi-envelope-paper me-1"></i>
               Formulario de contacto
             </button>
+
+            <span className="text-white small mx-4">|</span>
+            <span className="text-white small">|</span>
+              <a
+                href="https://escueladecuadros.sytes.net/tutorial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-link text-white p-0 small"
+                style={{ textDecoration: "underline" }}
+              >
+                <i className="bi bi-book me-1"></i>
+                  Tutorial de uso del Foro
+              </a>
+
           </div>
         </div>
       </footer>
