@@ -1254,3 +1254,16 @@ footer {
 .password-toggle i {
   pointer-events: none;  /* El ícono no interfiere con el clic */
 }
+
+/* linkify*/
+
+.comentario-texto a {
+  color: #db1010;
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.comentario-texto a:hover {
+  color: #600000;
+  text-decoration: none;
+}
