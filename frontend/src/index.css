@@ -1267,3 +1267,170 @@ footer {
   color: #600000;
   text-decoration: none;
 }
+
+/* ============================================
+   PRÓXIMA SESIÓN - PANEL DESTACADO
+   ============================================ */
+
+.proxima-sesion-panel {
+  margin-top: 0;
+}
+
+.proxima-sesion-card {
+  position: relative;
+  background: linear-gradient(135deg, #db1010 0%, #600000 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  color: white;
+  box-shadow: 0 12px 40px rgba(219, 16, 16, 0.4);
+  overflow: hidden;
+  animation: proximaPulse 3s ease-in-out infinite;
+}
+
+@keyframes proximaPulse {
+  0%, 100% { box-shadow: 0 12px 40px rgba(219, 16, 16, 0.4); }
+  50% { box-shadow: 0 12px 60px rgba(219, 16, 16, 0.7); }
+}
+
+.proxima-sesion-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: shine 4s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.proxima-sesion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.proxima-sesion-badge i {
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.proxima-sesion-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.proxima-sesion-icon {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.proxima-sesion-info {
+  flex-grow: 1;
+}
+
+.proxima-sesion-title {
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.proxima-sesion-desc {
+  font-size: 1rem;
+  opacity: 0.95;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.proxima-sesion-btn {
+  background: white;
+  color: #db1010;
+  font-weight: 700;
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.proxima-sesion-btn:hover {
+  background: white;
+  color: #600000;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.proxima-sesion-empty {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px dashed #adb5bd;
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.proxima-sesion-empty i {
+  font-size: 3rem;
+  color: #adb5bd;
+  margin-bottom: 1rem;
+  display: block;
+  animation: hourglass 3s ease-in-out infinite;
+}
+
+@keyframes hourglass {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
+
+.proxima-sesion-empty p {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .proxima-sesion-card { padding: 1.5rem; }
+  .proxima-sesion-content { flex-direction: column; align-items: center; text-align: center; }
+  .proxima-sesion-icon { width: 60px; height: 60px; font-size: 1.6rem; }
+  .proxima-sesion-title { font-size: 1.3rem; }
+  .proxima-sesion-btn { width: 100%; }
+}

@@ -177,6 +177,12 @@ class Enlace(models.Model):
     descripcion = models.TextField(blank=True)
     url = models.URLField()
     nivel = models.IntegerField(choices=[(1, 'Nivel 1'), (2, 'Nivel 2')], default=1, verbose_name='Nivel')
+    # Para sesiones online en vivo
+    es_proxima_sesion = models.BooleanField(
+        default=False,
+        verbose_name='Es próxima sesión',
+        help_text='Marcar si este enlace corresponde a la próxima clase online'
+    )
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
     orden = models.IntegerField(default=0)
