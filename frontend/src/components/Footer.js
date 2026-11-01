@@ -45,9 +45,9 @@ function Footer() {
             </button>
 
             <span className="text-white small mx-4">|</span>
-            <span className="text-white small">|</span>
+            
               <a
-                href="https://escueladecuadros.sytes.net/tutorial"
+                href="https://drive.google.com/drive/folders/12hVBnAntmHyN3zT6Rsh0EmesQGwskPIh?usp=drive_link"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-link text-white p-0 small"
